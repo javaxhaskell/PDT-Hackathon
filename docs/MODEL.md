@@ -60,9 +60,12 @@ valid, aligned data.
 Daily return: `r_t = close_t / close_{t-1} - 1`.
 
 We compute the **Pearson correlation** of the two daily-return series over
-the **full common sample**. The pair passes when correlation is at least
-`MIN_CORRELATION` (0.60). Correlation is only a first filter — we never
-present it as an edge.
+the **formation period only** — the first `FORMATION_FRACTION` (60%) of
+common dates, the same window that fits the line in step two (spec §4.5:
+the formation parameters, correlation included, are frozen; the evaluation
+period is never used to fit correlation, intercept or beta). The pair
+passes when correlation is at least `MIN_CORRELATION` (0.60). Correlation
+is only a first filter — we never present it as an edge.
 
 ## 3. Step two — what is their normal relationship?
 
@@ -97,7 +100,7 @@ spread_t = log(close A_t) - intercept - beta · log(close B_t)
 
 ### Suitability safeguards (spec order — first failure is the headline reason)
 
-1. Full-sample return correlation >= `MIN_CORRELATION` (0.60).
+1. Formation-period return correlation >= `MIN_CORRELATION` (0.60).
 2. `beta` is finite and strictly positive. (A positive beta supports the
    intuitive direction: when A is expensive relative to B, sell A, buy B.)
 3. **Split-beta stability**: refit each half of the formation period;
@@ -290,21 +293,29 @@ constraint is re-checked on the final rounded quantities.
   (never below 1 share per leg). Feasible = gross exposure fits inside
   the allowed gross (which already folds in both the gross cap and the
   stress budget). Among feasible candidates we pick the one whose
-  notional ratio is closest to the target ratio in log space;
-  *documented tie-breaks:* larger gross exposure first (use more of the
-  budget), then fewer A shares — fully deterministic. If nothing in the
-  search box is feasible, the minimum pair (1 share of each leg) is
-  tested; if even that breaches the limits, `sized = false` is returned
-  with a plain-English reason.
+  notional ratio is closest to the target ratio in log space.
+  *Documented refinement:* the ratio error is **quantised to 9 decimal
+  places** before comparison, so mathematically identical share ratios
+  (e.g. 4/2 and 6/3 shares) compare as true ties instead of being
+  separated by floating-point noise. *Documented tie-breaks:* among tied
+  candidates, larger gross exposure first (use more of the budget — so
+  6/3 beats 4/2), then fewer A shares — fully deterministic. If nothing
+  in the search box is feasible, the minimum pair (1 share of each leg)
+  is tested; if even that breaches the limits, `sized = false` is
+  returned with a plain-English reason.
 - **Fractional mode**: shares rounded to `FRACTIONAL_DECIMALS` (4).
   *Documented decision:* if half-up rounding nudges the total a hair over
   the limit, the quantities are floored at 4 decimals instead, so the
   limits are never breached.
 
 Reported fields: both legs (ticker, side, shares, price, notional), gross
-exposure, net exposure (buy notional − sell notional), estimated cost
-(`cost_bps` on both **entry** legs), stress loss estimate, risk budget,
-max allowed gross, and remaining cash = capital − gross exposure.
+exposure, net exposure (buy notional − sell notional), estimated cost,
+stress loss estimate, risk budget, max allowed gross, and remaining cash =
+capital − gross exposure. *Documented decision — estimated cost covers all
+**four** legs:* `2 × cost_bps × gross` — both legs at entry now plus both
+legs at the eventual exit; exit prices are unknown at sizing time, so the
+exit half is estimated at current prices and labelled an estimate in the
+UI.
 *Documented decision:* short proceeds are treated as reserved collateral,
 so the short leg consumes capital like the long leg — no leverage beyond
 the profile's gross cap, ever. The stress estimate is not a guaranteed

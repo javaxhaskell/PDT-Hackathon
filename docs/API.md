@@ -121,6 +121,11 @@ Risk profiles (fraction of starting capital):
 | `cost_bps` | number | `10.0` | 0–200 | Estimated cost in basis points **per leg per transaction** |
 | `data_mode` | enum | `"live"` | `live` \| `fixture` | Live yfinance or recorded fixture snapshot |
 
+Fixture mode ships frozen recorded snapshots for seven tickers — **ALL, CCL,
+KO, NVDA, PEP, RCL, TRV** — covering the demo pairs RCL/CCL (cruise-line
+rivals), ALL/TRV (insurers) and KO/PEP (colas). Requesting any other ticker
+in fixture mode returns `PROVIDER_ERROR`.
+
 The engine canonicalises the two tickers alphabetically internally before
 fitting, then maps every output (directions, signs, legs, cards, charts) back
 to the user's displayed A/B order. Callers always see displayed-order results.
@@ -148,7 +153,7 @@ to the user's displayed A/B order. Callers always see displayed-order results.
 | Value | Meaning |
 | --- | --- |
 | `INSUFFICIENT_DATA` | Too few common observations (fewer than 252 for a 1-year request, fewer than 400 for longer), or the usable window is too short to compute the required statistics |
-| `UNSUITABLE_PAIR` | The pair fails a suitability check: identical tickers, different quoted currencies, correlation below 0.60, beta not finite or not positive, formation-half betas differing by more than 50% of the full-formation beta, a leg above 80% of gross exposure, or fewer than 6 spread/rolling-mean crossings |
+| `UNSUITABLE_PAIR` | The pair fails a suitability check: identical tickers, different quoted currencies, formation-period correlation below 0.60, beta not finite or not positive, formation-half betas differing by more than 50% of the full-formation beta, a leg above 80% of gross exposure, or fewer than 6 spread/rolling-mean crossings |
 | `HISTORICAL_SCREEN_FAILED` | The fixed rule failed the minimum historical screen on unseen evaluation dates after costs (fewer than 5 completed trades, net profit ≤ 0, profit factor ≤ 1.0, or max drawdown worse than −20%) |
 | `WAIT` | The pair is suitable and the screen passed, but the current absolute z-score is below the 2.0 entry threshold — no unusual gap today |
 | `BUY_A_SELL_B` | z-score ≤ −2.0: A looks unusually **cheap** relative to B, so the paper trade buys A and sells B |
@@ -159,7 +164,7 @@ to the user's displayed A/B order. Callers always see displayed-order results.
 
 1. Provider or validation failure → `PROVIDER_ERROR`
 2. Insufficient common data → `INSUFFICIENT_DATA`
-3. Unsuitable pair — correlation below 0.60, invalid beta, beta changing by
+3. Unsuitable pair — formation-period correlation below 0.60, invalid beta, beta changing by
    more than 50% between formation halves, a leg above 80%, or mean crossings
    below 6 (identical tickers and currency mismatch are decided upstream by
    the data layer) → `UNSUITABLE_PAIR`
@@ -194,7 +199,7 @@ replaced with fixture data; fixture mode is always explicit and labelled.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `correlation` | number | Pearson correlation of daily returns (threshold ≥ 0.60) |
+| `correlation` | number | Pearson correlation of daily returns over the **formation period only** (threshold ≥ 0.60) — the evaluation period is never used to fit correlation, intercept or beta |
 | `beta` | number | OLS slope of log A on log B over the formation period — the hedge ratio (a notional weight, not a share ratio) |
 | `intercept` | number | OLS intercept over the formation period |
 | `split_beta_change` | number | \|β_h1 − β_h2\| / \|β_full\| across formation halves (limit 0.50) |
@@ -277,7 +282,7 @@ exists**.
 | `legs` | `SizingLeg[]` | The two legs: `ticker`, `side` (`BUY`/`SELL`), `shares`, `price`, `notional` |
 | `gross_exposure` | number | Sum of absolute leg notionals |
 | `net_exposure` | number | Signed sum of leg notionals |
-| `estimated_cost` | number | `cost_bps` × gross, on both legs at entry **and** exit (all four legs) |
+| `estimated_cost` | number | All **four** legs: `2 × cost_bps × gross` — both legs at entry plus both legs at exit, with the exit half estimated at current prices (exit prices are unknown at sizing time) |
 | `stress_loss_estimate` | number | Worst historical trade % loss × proposed gross (fallback 3% of gross when no losing trade exists) — not a guaranteed maximum loss |
 | `risk_budget` | number | Profile stress-loss allowance in currency |
 | `max_gross_allowed` | number | Profile gross-exposure cap in currency |
@@ -296,9 +301,9 @@ the minimum feasible whole-share pair still breaks the limit, `sized` is
 | Field | Type | Meaning |
 | --- | --- | --- |
 | `key` | enum | `move_together`, `stable_relationship`, `unusual_today`, `worked_historically` |
-| `title` | string | Display title |
+| `title` | string | Question-style display title: `"Do they move together?"`, `"Is the relationship steady?"`, `"Is today's gap unusual?"`, `"Did the rule work in the past?"` |
 | `status` | `CardStatus` | `pass`, `caution` or `fail` |
-| `headline_value` | string | e.g. `"0.74"` or `"z = +2.31"` |
+| `headline_value` | string | Plain-English headline, e.g. `"0.66 / 1.00"`, `"balance ratio 0.70"`, `"2.7x the usual drift"`, `"6 trades, net +3.6%"` (exact statistics stay in `detail_lines`) |
 | `detail_lines` | string[] | Values and thresholds shown on the card |
 | `how_this_works` | string | One–two sentence tooltip |
 | `plain_english` | string | Plain-English takeaway |
@@ -381,7 +386,7 @@ proposed trade. Identical requests are cached for one hour.
 | `headline` | string | Headline text (treated as untrusted quoted data) |
 | `snippet` | string \| null | Short snippet, may be missing |
 | `source` | string | Publisher name |
-| `published_at` | string | ISO-8601 publication time (last 30 days only) |
+| `published_at` | string | ISO-8601 publication time (last 30 days only; items whose timestamp cannot be parsed are dropped, since they cannot prove they fall inside the window) |
 | `url` | string \| null | Canonicalised link |
 
 Grounding guarantees: the model receives only ticker, company name, headline,
@@ -401,15 +406,27 @@ All structured errors use this shape; raw stack traces are never returned.
 
 | Field | Type | Meaning |
 | --- | --- | --- |
-| `error` | string | Machine-readable code (e.g. `"provider_error"`, `"validation_error"`) |
+| `error` | string | Machine-readable code, uppercase (below) |
 | `message` | string | Human-readable, plain English |
-| `details` | object \| null | Optional structured context |
+| `details` | object \| null | Optional structured context (only `VALIDATION_ERROR` sets it) |
+
+Codes emitted by the handlers in `backend/app/api/main.py`:
+
+| Code | HTTP status | When | `details` shape |
+| --- | --- | --- | --- |
+| `VALIDATION_ERROR` | 422 | The request body failed Pydantic validation | `{ "errors": [ { "loc": ["body", "cost_bps"], "msg": "…" }, … ] }` — one entry per failed field |
+| `PROVIDER_ERROR` | 502 | A `ProviderError` escaped as an exception (note: within `/api/analyse` provider failures are normally returned as HTTP 200 with `state: "PROVIDER_ERROR"`) | `null` |
+| `INTERNAL_ERROR` | 500 | Any unexpected server fault | `null` |
 
 ```json
 {
-  "error": "validation_error",
-  "message": "cost_bps must be between 0 and 200 basis points.",
-  "details": { "field": "cost_bps" }
+  "error": "VALIDATION_ERROR",
+  "message": "The request was invalid; check the listed fields.",
+  "details": {
+    "errors": [
+      { "loc": ["body", "cost_bps"], "msg": "Input should be less than or equal to 200" }
+    ]
+  }
 }
 ```
 
@@ -417,16 +434,30 @@ All structured errors use this shape; raw stack traces are never returned.
 
 ## Complete example
 
-From `docs/example_api_response.json` (a schema-validated contract example
-for the KO/PEP fixture pair; values are illustrative).
+`docs/example_api_response.json` is a **real recorded backend response** for
+the ALL/TRV fixture pair, wrapped in a top-level `{ "_comment", "analyse",
+"narrative" }` object:
+
+- **`analyse`** is the actual `POST /api/analyse` response produced by the
+  backend from the recorded fixture snapshot (captured 2026-07-13) — full
+  precision, full chart arrays, arithmetic-consistent.
+- **`narrative`** is a `NarrativeResponse` produced by the **deterministic
+  fake narrative provider** over the real recorded news items — its model
+  name `"fake-narrative"` makes this unmistakable. No live DeepSeek call was
+  involved in producing this example file. (Separately, the repo does ship
+  real recorded DeepSeek replies for the demo pairs —
+  `backend/fixtures/narrative_RCL_CCL.json` and
+  `backend/fixtures/narrative_ALL_TRV.json`, model `deepseek-v4-flash`,
+  captured 2026-07-13 — which fixture-mode `POST /api/narrative` replays
+  with `ai_status: "recorded"`.)
 
 ### Request
 
 ```json
 POST /api/analyse
 {
-  "ticker_a": "KO",
-  "ticker_b": "PEP",
+  "ticker_a": "ALL",
+  "ticker_b": "TRV",
   "starting_capital": 10000.0,
   "risk_profile": "balanced",
   "lookback": "2y",
@@ -436,92 +467,104 @@ POST /api/analyse
 }
 ```
 
-### Response (abbreviated chart arrays — full version in `docs/example_api_response.json`)
+### Response (floats shortened and chart arrays abbreviated here — the JSON file holds the full-precision original)
 
 ```json
 {
   "request": {
-    "ticker_a": "KO", "ticker_b": "PEP", "starting_capital": 10000.0,
+    "ticker_a": "ALL", "ticker_b": "TRV", "starting_capital": 10000.0,
     "risk_profile": "balanced", "lookback": "2y", "whole_shares": true,
     "cost_bps": 10.0, "data_mode": "fixture"
   },
   "data": {
-    "provider": "fixture", "retrieved_at": "2026-07-13T12:00:00+00:00",
+    "provider": "fixture", "retrieved_at": "2026-07-13T15:05:34+00:00",
     "last_market_date": "2026-07-13", "currency": "USD",
-    "n_common_observations": 502, "is_fixture": true,
-    "fixture_captured_at": "2026-07-13T12:00:00+00:00",
-    "exchange_a": "NYQ", "exchange_b": "NMS"
+    "n_common_observations": 504, "is_fixture": true,
+    "fixture_captured_at": "2026-07-13T15:05:34+00:00",
+    "exchange_a": "NYQ", "exchange_b": "NYQ"
   },
   "state": "SELL_A_BUY_B",
-  "explanation": "KO looks unusually expensive relative to PEP (z = +2.31), and the fixed rule passed the minimum historical screen after costs.",
+  "explanation": "ALL looks unusually expensive relative to TRV (z = +2.67), so the strategy would sell ALL and buy TRV.",
   "relationship": {
-    "correlation": 0.74, "beta": 0.86, "intercept": 1.21,
-    "split_beta_change": 0.18, "mean_crossings": 14,
-    "leg_weight_a": 0.5376, "leg_weight_b": 0.4624,
-    "formation_start": "2024-07-15", "formation_end": "2025-09-26",
-    "evaluation_start": "2025-09-29", "evaluation_end": "2026-07-13"
+    "correlation": 0.6595, "beta": 0.6990, "intercept": 1.3947,
+    "split_beta_change": 0.0690, "mean_crossings": 62,
+    "leg_weight_a": 0.5886, "leg_weight_b": 0.4114,
+    "formation_start": "2024-07-09", "formation_end": "2025-09-19",
+    "evaluation_start": "2025-09-22", "evaluation_end": "2026-07-13"
   },
   "signal": {
-    "current_spread": 0.0342, "rolling_mean": 0.0021, "rolling_std": 0.0139,
-    "z_score": 2.31, "as_of_date": "2026-07-13",
+    "current_spread": 0.0695, "rolling_mean": 0.0011, "rolling_std": 0.0256,
+    "z_score": 2.6709, "as_of_date": "2026-07-13",
     "entry_z": 2.0, "exit_z": 0.5, "stop_z": 3.5, "max_holding_days": 20
   },
   "backtest": {
-    "n_trades": 7, "net_profit": 0.043, "net_return": 0.043,
-    "gross_return": 0.058, "win_rate": 0.714, "avg_win": 0.011,
-    "avg_loss": -0.006, "profit_factor": 2.4, "max_drawdown": -0.031,
-    "avg_holding_days": 8.3, "total_costs": 0.0056,
-    "screen_passed": true, "limited_evidence": true, "worst_trade_pnl": -0.009
+    "n_trades": 6, "net_profit": 0.0357, "net_return": 0.0351,
+    "gross_return": 0.0477, "win_rate": 0.6667, "avg_win": 0.0181,
+    "avg_loss": -0.0184, "profit_factor": 1.9706, "max_drawdown": -0.0440,
+    "avg_holding_days": 12.5, "total_costs": 0.0122,
+    "screen_passed": true, "limited_evidence": true, "worst_trade_pnl": -0.0324
   },
   "trades": [
     {
-      "signal_date": "2025-11-03", "entry_date": "2025-11-04",
-      "exit_signal_date": "2025-11-12", "exit_date": "2025-11-13",
-      "direction": "SELL_A_BUY_B", "entry_beta": 0.86,
-      "qty_a": -0.0089, "qty_b": 0.0031,
-      "entry_price_a": 60.12, "entry_price_b": 148.3,
-      "exit_price_a": 58.9, "exit_price_b": 149.1,
-      "costs": 0.0004, "exit_reason": "target", "holding_days": 7, "pnl": 0.0121
+      "signal_date": "2025-10-21", "entry_date": "2025-10-22",
+      "exit_signal_date": "2025-11-11", "exit_date": "2025-11-12",
+      "direction": "BUY_A_SELL_B", "entry_beta": 0.6990,
+      "qty_a": 0.00308, "qty_b": -0.00154,
+      "entry_price_a": 191.070835, "entry_price_b": 267.180835,
+      "exit_price_a": 204.20226, "exit_price_b": 282.65783,
+      "costs": 0.00206, "exit_reason": "target", "holding_days": 15, "pnl": 0.01456
     }
   ],
   "sizing": {
     "sized": true, "reason": null,
     "legs": [
-      { "ticker": "KO", "side": "SELL", "shares": 67.0, "price": 60.12, "notional": 4028.04 },
-      { "ticker": "PEP", "side": "BUY", "shares": 23.0, "price": 148.3, "notional": 3410.9 }
+      { "ticker": "ALL", "side": "SELL", "shares": 6.0, "price": 252.220001, "notional": 1513.320006 },
+      { "ticker": "TRV", "side": "BUY", "shares": 3.0, "price": 336.079987, "notional": 1008.239961 }
     ],
-    "gross_exposure": 7438.94, "net_exposure": -617.14,
-    "estimated_cost": 14.88, "stress_loss_estimate": 66.95,
-    "risk_budget": 100.0, "max_gross_allowed": 7500.0, "remaining_cash": 6589.1
+    "gross_exposure": 2521.559967, "net_exposure": -505.080045,
+    "estimated_cost": 5.043119934, "stress_loss_estimate": 81.675060,
+    "risk_budget": 100.0, "max_gross_allowed": 7500.0, "remaining_cash": 7478.440033
   },
   "evidence_cards": [
     {
-      "key": "move_together", "title": "Move together", "status": "pass",
-      "headline_value": "0.74",
-      "detail_lines": ["Return correlation: 0.74", "Threshold: at least 0.60"],
-      "how_this_works": "We measure how strongly the two stocks' daily percentage moves line up. 1.0 means perfectly together, 0 means unrelated.",
-      "plain_english": "Their daily moves lined up strongly."
+      "key": "move_together", "title": "Do they move together?", "status": "pass",
+      "headline_value": "0.66 / 1.00",
+      "detail_lines": ["Daily-return correlation: 0.66", "Pass threshold: at least 0.60"],
+      "how_this_works": "…", "plain_english": "The daily percentage moves of ALL and TRV lined up strongly."
     },
     {
-      "key": "stable_relationship", "title": "Stable enough relationship", "status": "pass",
-      "headline_value": "beta 0.86",
-      "detail_lines": ["Beta: 0.86", "Beta change between halves: 18%", "Spread crossings: 14", "Largest leg: 54%"],
-      "how_this_works": "A line of best fit describes their normal price relationship. We check the ratio did not change dramatically.",
-      "plain_english": "The line-of-best-fit relationship is usable."
+      "key": "stable_relationship", "title": "Is the relationship steady?", "status": "pass",
+      "headline_value": "balance ratio 0.70",
+      "detail_lines": [
+        "Hedge ratio (beta): 0.699 (must be a positive, finite number)",
+        "Beta change between formation halves: 7% (limit 50%)",
+        "Largest leg weight: 59% of gross (limit 80%)",
+        "Spread crossed its rolling average 62 times (minimum 6)"
+      ],
+      "how_this_works": "…", "plain_english": "…"
     },
     {
-      "key": "unusual_today", "title": "Unusual today", "status": "pass",
-      "headline_value": "z = +2.31",
-      "detail_lines": ["Current z-score: +2.31", "Entry threshold: 2.0"],
-      "how_this_works": "The z-score counts how many recent standard deviations today's gap is from normal.",
-      "plain_english": "Today's gap is large enough to act on."
+      "key": "unusual_today", "title": "Is today's gap unusual?", "status": "pass",
+      "headline_value": "2.7x the usual drift",
+      "detail_lines": [
+        "Current z-score: +2.67 (as of 2026-07-13)",
+        "Entry threshold: |z| >= 2.0 (caution from |z| >= 1.50)",
+        "Spread 0.0695 vs rolling mean 0.0011 (std 0.0256)"
+      ],
+      "how_this_works": "…", "plain_english": "…"
     },
     {
-      "key": "worked_historically", "title": "Worked historically", "status": "caution",
-      "headline_value": "7 trades, +4.3%",
-      "detail_lines": ["Completed trades: 7 (limited evidence)", "Net profit after costs: +4.3%", "Profit factor: 2.4", "Max drawdown: -3.1%"],
-      "how_this_works": "We replay the unchanged rule on later dates the fit never saw, entering at the next day's open and subtracting costs.",
-      "plain_english": "The fixed rule cleared the minimum historical screen after costs, but 7 trades is limited evidence."
+      "key": "worked_historically", "title": "Did the rule work in the past?", "status": "caution",
+      "headline_value": "6 trades, net +3.6%",
+      "detail_lines": [
+        "Completed trades: 6 (minimum 5)",
+        "Net profit after costs: +3.57% of gross exposure (must be > 0)",
+        "Profit factor: 1.97 (must be above 1.0)",
+        "Max drawdown: -4.4% (limit -20%)",
+        "Total estimated costs: 1.22% of gross exposure",
+        "Limited evidence: 5-9 trades is too few to call reliable."
+      ],
+      "how_this_works": "…", "plain_english": "…"
     }
   ],
   "charts": {
@@ -530,64 +573,62 @@ POST /api/analyse
       "spread": ["…"], "rolling_mean": ["…"],
       "upper_entry": ["…"], "lower_entry": ["…"],
       "upper_stop": ["…"], "lower_stop": ["…"],
-      "markers": [
-        { "date": "2025-11-03", "kind": "entry", "direction": "SELL_A_BUY_B", "z": 2.14 },
-        { "date": "2025-11-12", "kind": "exit", "direction": "SELL_A_BUY_B", "z": 0.42 }
-      ],
-      "formation_end": "2025-09-26"
+      "markers": ["…SpreadMarker…"],
+      "formation_end": "2025-09-19"
     },
     "equity": { "equity": ["…"] }
   },
   "warnings": [
+    "The historical screen passed with limited evidence (6 completed trades); treat the result with extra caution.",
+    "Recorded market snapshot — fixture data captured 2026-07-13",
     "Historical performance does not guarantee future results.",
-    "Recorded market snapshot — fixture data captured 2026-07-13."
+    "…"
   ],
   "methodology_version": "1.0.0"
 }
 ```
 
-### Narrative request/response
+### Narrative block (deterministic fake provider — not live AI)
 
-```json
-POST /api/narrative
-{ "ticker_a": "KO", "ticker_b": "PEP", "data_mode": "fixture" }
-```
+The `narrative` block in the example file corresponds to
+`POST /api/narrative` with `{ "ticker_a": "ALL", "ticker_b": "TRV",
+"data_mode": "fixture" }`, answered by the fake provider used in tests
+(`model: "fake-narrative"`). The 16 `news_items` are the real recorded
+fixture news items; the source IDs cited in `evidence` are real supplied
+IDs. Abbreviated:
 
 ```json
 {
   "ai_status": "ok",
-  "model": "deepseek-v4-flash",
+  "model": "fake-narrative",
   "classification": "NO_OBVIOUS_NEWS_EXPLANATION",
-  "confidence": "MEDIUM",
-  "summary_a": "Coca-Cola's recent coverage centres on routine earnings previews and dividend commentary.",
-  "summary_b": "PepsiCo's headlines discuss snack-division marketing and an analyst rating maintenance.",
+  "confidence": "LOW",
+  "summary_a": "Recent headlines for ALL show routine coverage with no obvious company-specific driver.",
+  "summary_b": "Recent headlines for TRV show routine coverage with no obvious company-specific driver.",
   "shared_story": null,
-  "risk_flags": ["Routine earnings coverage for both companies"],
+  "risk_flags": [],
   "evidence": [
-    {
-      "claim": "Coverage of both companies is routine rather than event-driven.",
-      "source_ids": ["yf-a1", "yf-b2"]
-    }
+    { "claim": "Coverage of ALL looks routine.", "source_ids": ["yf-3cc8a4f7-61e3-388f-9ffb-f3fb0de7d0bd"] },
+    { "claim": "Coverage of TRV looks routine.", "source_ids": ["yf-bd7b619b-43f0-39ef-86c8-238d53acab84"] }
   ],
-  "explanation": "The supplied headlines show routine coverage for both companies and no obvious company-specific event that would explain the current price gap.",
-  "news_items": [
-    {
-      "source_id": "yf-a1", "ticker": "KO",
-      "headline": "Example headline about KO", "snippet": "Short snippet.",
-      "source": "Reuters", "published_at": "2026-07-09T14:00:00+00:00",
-      "url": "https://example.com/a1"
-    },
-    {
-      "source_id": "yf-b2", "ticker": "PEP",
-      "headline": "Example headline about PEP", "snippet": "Short snippet.",
-      "source": "Bloomberg", "published_at": "2026-07-08T09:00:00+00:00",
-      "url": "https://example.com/b2"
-    }
-  ],
+  "explanation": "Deterministic fake narrative used for tests; the supplied headlines were not analysed by a live model.",
+  "news_items": ["…16 real recorded NewsItem objects…"],
   "elevated_news_risk": false,
   "recorded_at": null
 }
 ```
+
+What a real fixture-mode `POST /api/narrative` returns instead: when a
+recorded reply exists for the pair it is replayed with `ai_status:
+"recorded"` regardless of key configuration — the repo ships recordings for
+RCL/CCL and ALL/TRV (`backend/fixtures/narrative_RCL_CCL.json`,
+`backend/fixtures/narrative_ALL_TRV.json`, model `deepseek-v4-flash`,
+captured 2026-07-13). For pairs without a recording, a configured key calls
+live DeepSeek even in fixture mode, and with no `DEEPSEEK_API_KEY` the
+response is `ai_status: "not_configured"` (with the real news items
+attached). New recordings are created via
+`backend/scripts/record_fixtures.py --narrative A B`, which requires a real
+key.
 
 ---
 
