@@ -282,6 +282,25 @@ class AnalyseResponse(BaseModel):
     methodology_version: str
 
 
+class QuantResult(BaseModel):
+    """Everything the quant engine produces for one analysis.
+
+    Returned by app.quant.engine.run_analysis (see docs/INTERFACES.md).
+    The API layer merges this with data metadata into AnalyseResponse.
+    """
+
+    state: FinalState
+    explanation: str
+    relationship: Optional[RelationshipStats] = None
+    signal: Optional[SignalStats] = None
+    backtest: Optional[BacktestMetrics] = None
+    trades: list[TradeRecord] = []
+    sizing: Optional[SizingResult] = None
+    evidence_cards: list[EvidenceCard] = []
+    charts: Optional[Charts] = None
+    warnings: list[str] = []
+
+
 # ---------------------------------------------------------------------------
 # Narrative Lens
 # ---------------------------------------------------------------------------

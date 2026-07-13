@@ -21,6 +21,7 @@ from .contracts import (  # noqa: F401
     NarrativeResponse,
     NewsItem,
     NormalisedPricesChart,
+    QuantResult,
     RelationshipStats,
     RiskProfile,
     SeriesPoint,
