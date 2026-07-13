@@ -62,7 +62,17 @@ make test           # backend pytest + frontend vitest
 
 ## Screenshots
 
-_(added after the UI is built)_
+Verdict and the four-card evidence checklist (recorded ALL/TRV snapshot):
+
+![Verdict and evidence cards](docs/screenshots/verdict-cards.png)
+
+Spread and signal chart with entry/stop bands and historical trade markers:
+
+![Spread chart](docs/screenshots/spread-chart.png)
+
+The input form:
+
+![Input form](docs/screenshots/form.png)
 
 ## Assumptions and limitations
 
