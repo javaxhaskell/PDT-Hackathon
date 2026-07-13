@@ -36,9 +36,11 @@ make dev            # backend :8000 + frontend :3000
 
 Or separately: `make backend` and `make frontend`.
 
-Open http://localhost:3000, enter two tickers (try **KO / PEP**), pick a risk
-profile and press Analyse. Use **fixture mode** for a deterministic offline
-demo with recorded real market snapshots.
+Open http://localhost:3000, enter two tickers, pick a risk profile and press
+Analyse. Use **Demo (fixture) mode** for a deterministic offline run against
+recorded real market snapshots — try **ALL / TRV** (a candidate setup at
+capture time), **KO / PEP** (a borderline rejection) or **NVDA / KO** (an
+unsuitable pair).
 
 ## Configuration
 

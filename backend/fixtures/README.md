@@ -60,8 +60,11 @@ never live AI.
 
 ## Recorded pairs
 
-- `KO` / `PEP` — the candidate pair used in the demo.
+- `ALL` / `TRV` — the candidate pair used in the demo (passed the full
+  screen with an actionable signal at capture time).
 - `NVDA` / `KO` — an unsuitable pair (used to demo honest rejection).
+- `KO` / `PEP` — a borderline rejection (correlation just below the 0.60
+  threshold at capture time — a good honesty story).
 
 Fixture mode shows a visible **Recorded market snapshot** banner in the UI
 and `is_fixture: true` plus `fixture_captured_at` in API metadata. Live

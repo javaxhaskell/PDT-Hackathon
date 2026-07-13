@@ -2,26 +2,51 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * PairScope design tokens (spec section 13).
+ * Dark navy financial-research look. Chart series colours were validated
+ * for CVD separation and >=3:1 contrast against --surface-deep.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0b1120; /* deep navy page background */
+  --surface: #121b30; /* card surface */
+  --surface-deep: #0e1626; /* chart / inset surface */
+  --border: #24314b;
+  --foreground: #e8edf6; /* off-white text */
+  --muted: #96a3ba;
+
+  --teal: #0fa393; /* positive / buy (marks) */
+  --teal-bright: #2dd4bf;
+  --teal-text: #5eead4; /* positive text on dark */
+  --coral: #e66767; /* negative / sell / risk (marks) */
+  --coral-text: #fda4a4;
+  --amber: #c98500; /* caution (marks) */
+  --amber-text: #fcd34d;
+  --violet: #9085e9; /* second identity series (ticker B) */
+  --grid: #1e2942;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Subtle motion only where it clarifies state changes. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

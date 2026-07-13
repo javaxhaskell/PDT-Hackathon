@@ -1,101 +1,227 @@
-import Image from "next/image";
+"use client";
+
+import { useCallback, useRef, useState } from "react";
+
+import AnalyseForm, {
+  DEFAULT_FORM_VALUES,
+  type FormValues,
+} from "@/components/AnalyseForm";
+import ChartsSection from "@/components/ChartsSection";
+import EvidenceCardView from "@/components/EvidenceCardView";
+import NarrativeCard, {
+  type NarrativePanelState,
+} from "@/components/NarrativeCard";
+import TradePlanPanel from "@/components/TradePlanPanel";
+import VerdictBanner from "@/components/VerdictBanner";
+import WarningsFooter from "@/components/WarningsFooter";
+import { analyse, fetchNarrative } from "@/lib/api";
+import { fmtDate, fmtTimestamp } from "@/lib/format";
+import type { AnalyseRequest, AnalyseResponse, RiskProfile } from "@/lib/types";
+
+function toRequest(values: FormValues): AnalyseRequest {
+  return {
+    ticker_a: values.tickerA.trim().toUpperCase(),
+    ticker_b: values.tickerB.trim().toUpperCase(),
+    starting_capital: Number(values.startingCapital) || 10000,
+    risk_profile: values.riskProfile,
+    lookback: values.lookback,
+    whole_shares: values.wholeShares,
+    cost_bps: Number(values.costBps) || 0,
+    data_mode: values.dataMode,
+  };
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [form, setForm] = useState<FormValues>(DEFAULT_FORM_VALUES);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<AnalyseResponse | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [narrative, setNarrative] = useState<NarrativePanelState>({
+    status: "off",
+  });
+  const runIdRef = useRef(0);
+  const narrativeKeyRef = useRef<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const runAnalyse = useCallback(async (values: FormValues) => {
+    const req = toRequest(values);
+    if (!req.ticker_a || !req.ticker_b) return;
+    const runId = ++runIdRef.current;
+    setLoading(true);
+    setErrorMsg(null);
+    try {
+      const res = await analyse(req);
+      if (runId !== runIdRef.current) return;
+      setResult(res);
+      setLoading(false);
+
+      // The Narrative Lens is fetched separately so the AI card never
+      // blocks the quant result. It only depends on the pair + data mode,
+      // so a sizing-only change (e.g. risk profile) reuses the last answer.
+      if (values.narrativeOn) {
+        const key = `${req.ticker_a}|${req.ticker_b}|${req.data_mode}`;
+        if (narrativeKeyRef.current !== key) {
+          narrativeKeyRef.current = key;
+          setNarrative({ status: "loading" });
+          fetchNarrative({
+            ticker_a: req.ticker_a,
+            ticker_b: req.ticker_b,
+            data_mode: req.data_mode,
+          })
+            .then((data) => {
+              if (narrativeKeyRef.current === key) {
+                setNarrative({ status: "done", data });
+              }
+            })
+            .catch(() => {
+              if (narrativeKeyRef.current === key) {
+                setNarrative({ status: "error" });
+              }
+            });
+        }
+      } else {
+        narrativeKeyRef.current = null;
+        setNarrative({ status: "off" });
+      }
+    } catch (e) {
+      if (runId !== runIdRef.current) return;
+      setLoading(false);
+      setResult(null);
+      setErrorMsg(
+        e instanceof Error ? e.message : "The analysis request failed.",
+      );
+    }
+  }, []);
+
+  const onPatch = useCallback((patch: Partial<FormValues>) => {
+    setForm((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  // A risk-profile change re-analyses immediately when results are shown,
+  // so share quantities update live during a demo.
+  const onRiskProfileChange = useCallback(
+    (profile: RiskProfile) => {
+      const next = { ...form, riskProfile: profile };
+      setForm(next);
+      if (result) void runAnalyse(next);
+    },
+    [form, result, runAnalyse],
+  );
+
+  const currency = result?.data?.currency ?? null;
+  const displayA = result?.request.ticker_a ?? form.tickerA;
+  const displayB = result?.request.ticker_b ?? form.tickerB;
+
+  return (
+    <div className="mx-auto min-h-screen max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <header className="mb-8">
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <h1 className="text-2xl font-bold tracking-tight text-ink">
+            Pair<span className="text-pos-text">Scope</span>
+          </h1>
+          <span className="rounded-full border border-edge px-2.5 py-0.5 text-xs font-semibold text-muted">
+            Educational research tool — not financial advice
+          </span>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+          Enter two related stocks. PairScope measures how unusual their
+          current gap is, checks whether a fixed rule passed a minimum
+          historical screen after costs, sizes a paper trade inside your risk
+          budget, and asks an AI to read recent headlines for context. The
+          numbers say whether the gap is unusual; the AI helps investigate
+          why.
+        </p>
+      </header>
+
+      <AnalyseForm
+        values={form}
+        onPatch={onPatch}
+        onRiskProfileChange={onRiskProfileChange}
+        onSubmit={() => void runAnalyse(form)}
+        loading={loading}
+        currency={currency}
+      />
+
+      {errorMsg && (
+        <div
+          role="alert"
+          className="mt-6 rounded-xl border border-neg/60 bg-neg/10 p-5"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          <p className="text-sm font-semibold text-neg-text">
+            Analysis failed
+          </p>
+          <p className="mt-1 text-sm text-muted">{errorMsg}</p>
+        </div>
+      )}
+
+      {result && (
+        <main aria-label="Analysis results" className="mt-6 space-y-6">
+          {result.data?.is_fixture && (
+            <p
+              role="status"
+              className="rounded-xl border-2 border-warn/70 bg-warn/15 px-4 py-3 text-sm font-bold text-warn-text"
+            >
+              Recorded market snapshot
+              {result.data.fixture_captured_at
+                ? ` — captured ${fmtTimestamp(result.data.fixture_captured_at)}`
+                : ""}
+              . This is demo data, not live prices.
+            </p>
+          )}
+
+          <VerdictBanner
+            state={result.state}
+            explanation={result.explanation}
+            tickerA={displayA}
+            tickerB={displayB}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+          {result.data && (
+            <p className="text-xs text-muted">
+              Data: {result.data.provider} · retrieved{" "}
+              {fmtTimestamp(result.data.retrieved_at)} · last market date{" "}
+              {fmtDate(result.data.last_market_date)} · {result.data.currency}{" "}
+              · {result.data.n_common_observations} common observations ·
+              methodology v{result.methodology_version}
+            </p>
+          )}
+
+          {result.evidence_cards.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+              {result.evidence_cards.map((card) => (
+                <EvidenceCardView key={card.key} card={card} />
+              ))}
+            </div>
+          )}
+
+          <NarrativeCard state={narrative} />
+
+          {result.sizing && (
+            <TradePlanPanel sizing={result.sizing} currency={currency} />
+          )}
+
+          {result.charts && (
+            <ChartsSection
+              charts={result.charts}
+              tickerA={displayA}
+              tickerB={displayB}
+              maxDrawdown={result.backtest?.max_drawdown}
+            />
+          )}
+
+          <WarningsFooter warnings={result.warnings} />
+        </main>
+      )}
+
+      {!result && !errorMsg && (
+        <div className="mt-6 space-y-6">
+          <div className="rounded-xl border border-dashed border-edge p-8 text-center text-sm text-muted">
+            Enter two tickers and press Analyse to run the five-step checklist:
+            move together, stable relationship, unusual today, worked
+            historically, and the AI Narrative Lens.
+          </div>
+          <WarningsFooter warnings={[]} />
+        </div>
+      )}
     </div>
   );
 }

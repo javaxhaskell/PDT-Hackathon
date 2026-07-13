@@ -2,10 +2,18 @@
  "metadata": {
   "ticker": "KO",
   "provider": "yfinance",
-  "captured_at": "2026-07-13T13:30:30+00:00",
-  "content_hash": "sha256:5b423d5751128f00d41c1162ff47ac1336db6155def0509d0b9c2f7e2f999b34"
+  "captured_at": "2026-07-13T14:07:24+00:00",
+  "content_hash": "sha256:186611225dfc26a95fd2d71e4fb0d3921565d96d4e5d6a29c470a74ee7e2d725"
  },
  "items": [
+  {
+   "source_id": "yf-c17e8322-96d5-3918-9b0d-5db7a4bc48c2",
+   "headline": "Coke Is Trading at Its Steepest Premium to Pepsi in Years. History Says This Is What Happens Next.",
+   "snippet": "Coke's strong results back up its premium valuation, but Pepsi may simply be too cheap to ignore.",
+   "source": "Motley Fool",
+   "published_at": "2026-07-13T13:45:00Z",
+   "url": "https://www.fool.com/investing/2026/07/13/coke-is-trading-at-its-steepest-premium-to-pepsi-i/"
+  },
   {
    "source_id": "yf-0eddb78b-5647-3a33-b15b-66dd2d9e7c72",
    "headline": "Is Pepsi Stock Hiding A Deeper U.S. Problem?",
@@ -77,14 +85,6 @@
    "source": "Motley Fool",
    "published_at": "2026-07-12T12:27:00Z",
    "url": "https://www.fool.com/investing/2026/07/12/coca-cola-just-declared-its-64th-dividend-increase/"
-  },
-  {
-   "source_id": "yf-22cfcc83-4053-3cdb-aa8d-4357f86bb398",
-   "headline": "Coca-Cola Is Crushing the S&P 500 and Nasdaq-100. But There's an Even Better Reason to Buy the Stock in July.",
-   "snippet": "Coca-Cola offers one of the best ways to participate in the stock market while generating reliable passive income.",
-   "source": "Motley Fool",
-   "published_at": "2026-07-11T18:20:00Z",
-   "url": "https://www.fool.com/investing/2026/07/11/coca-cola-is-crushing-the-sp-500-and-nasdaq-100-bu/"
   }
  ]
 }

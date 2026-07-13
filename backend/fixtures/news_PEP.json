@@ -2,10 +2,18 @@
  "metadata": {
   "ticker": "PEP",
   "provider": "yfinance",
-  "captured_at": "2026-07-13T13:30:31+00:00",
-  "content_hash": "sha256:3da2626b1c367e775e1de69bdffcb12ba9fd64be23a77c336e9410d2be30f567"
+  "captured_at": "2026-07-13T14:07:25+00:00",
+  "content_hash": "sha256:3e49e40050ef036fe09812e23009d12fea86da590301654aca03a2e124e0de54"
  },
  "items": [
+  {
+   "source_id": "yf-c17e8322-96d5-3918-9b0d-5db7a4bc48c2",
+   "headline": "Coke Is Trading at Its Steepest Premium to Pepsi in Years. History Says This Is What Happens Next.",
+   "snippet": "Coke's strong results back up its premium valuation, but Pepsi may simply be too cheap to ignore.",
+   "source": "Motley Fool",
+   "published_at": "2026-07-13T13:45:00Z",
+   "url": "https://www.fool.com/investing/2026/07/13/coke-is-trading-at-its-steepest-premium-to-pepsi-i/"
+  },
   {
    "source_id": "yf-0eddb78b-5647-3a33-b15b-66dd2d9e7c72",
    "headline": "Is Pepsi Stock Hiding A Deeper U.S. Problem?",
@@ -77,14 +85,6 @@
    "source": "24/7 Wall St.",
    "published_at": "2026-07-10T20:23:48Z",
    "url": "https://247wallst.com/investing/2026/07/10/pepsicos-200-billion-stability-play-is-attracting-dividend-investors/"
-  },
-  {
-   "source_id": "yf-b6fc8357-acc0-3e85-aa8e-0af2ecfcfd1d",
-   "headline": "PepsiCo (PEP) Stock Fair Value Edges Lower As Analysts Split On North America Execution",
-   "snippet": "PepsiCo\u2019s fair value estimate has been trimmed from US$168.27 to US$164.86, a reduction of about 2.0% that reflects more cautious assumptions in the latest valuation work. This adjustment lines up with research in which bullish analysts are keeping positive ratings while reducing price targets, and more cautious voices are questioning near term execution, particularly in PepsiCo Foods North America. As you read on, you will see how this evolving analyst narrative might influence how you track...",
-   "source": "Simply Wall St.",
-   "published_at": "2026-07-10T20:09:46Z",
-   "url": "https://finance.yahoo.com/markets/stocks/articles/pepsico-pep-stock-fair-value-200946365.html"
   }
  ]
 }
