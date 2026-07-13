@@ -1,0 +1,9 @@
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.8
+pandas>=2.2
+numpy>=1.26
+statsmodels>=0.14
+yfinance>=0.2.50
+openai>=1.40
+requests>=2.32
