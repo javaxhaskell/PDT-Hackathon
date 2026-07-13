@@ -1,0 +1,41 @@
+{
+ "metadata": {
+  "ticker_a": "ALL",
+  "ticker_b": "TRV",
+  "model": "deepseek-v4-flash",
+  "captured_at": "2026-07-13T15:26:25+00:00",
+  "content_hash": "sha256:d8ff6755da858b15b9acd1c0f1ad98a6bc7252c21d284dc3e7295f4e497c2468"
+ },
+ "reply": {
+  "summary_a": "Allstate news includes a quiet catastrophe year, legal risks from an Oklahoma lawsuit, and comparisons to Progressive, with mixed valuation perspectives.",
+  "summary_b": "Travelers news highlights positive earnings expectations, fair value increases, and AI/underwriting initiatives, suggesting a strong outlook.",
+  "shared_story": null,
+  "classification": "POSSIBLE_COMPANY_SPECIFIC_EXPLANATION",
+  "confidence": "MEDIUM",
+  "risk_flags": [
+   "legal risk"
+  ],
+  "evidence": [
+   {
+    "claim": "Allstate faces legal risk from Oklahoma lawsuit",
+    "source_ids": [
+     "yf-e3f23ffb-af5e-30d0-874b-05477d266735"
+    ]
+   },
+   {
+    "claim": "Travelers expected to beat earnings estimates",
+    "source_ids": [
+     "yf-155e102a-fbbb-34be-8ba6-62df6adeb781",
+     "yf-7d86f7da-e452-3289-9370-f33648e1edec"
+    ]
+   },
+   {
+    "claim": "Travelers fair value increased due to improved margin outlook",
+    "source_ids": [
+     "yf-bd7b619b-43f0-39ef-86c8-238d53acab84"
+    ]
+   }
+  ],
+  "explanation": "Allstate news is mixed with legal risks and valuation concerns, while Travelers news is consistently positive with earnings beat expectations and fair value upgrades, which could explain a divergence favoring Travelers."
+ }
+}

@@ -93,7 +93,9 @@ DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash")
 DEEPSEEK_TIMEOUT_SECONDS = 20.0
 DEEPSEEK_MAX_RETRIES = 1           # at most one retry
 DEEPSEEK_TEMPERATURE = 0.1
-DEEPSEEK_MAX_OUTPUT_TOKENS = 600
+# Large enough for the bounded reply (two summaries, <=3 claims, <=70-word
+# explanation) with headroom — a too-small cap truncates the JSON mid-string.
+DEEPSEEK_MAX_OUTPUT_TOKENS = 1500
 
 # ---------------------------------------------------------------------------
 # Server

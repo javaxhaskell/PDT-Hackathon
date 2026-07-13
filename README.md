@@ -71,6 +71,11 @@ Proposed paper trade for an actionable setup (recorded ALL/TRV snapshot):
 
 ![Trade plan](docs/screenshots/trade-plan.png)
 
+The AI Narrative Lens replaying a recorded real DeepSeek analysis with
+cited headlines (Demo mode):
+
+![AI Narrative Lens](docs/screenshots/ai-lens.png)
+
 The gap chart with entry/stop bands and historical trade markers:
 
 ![Spread chart](docs/screenshots/spread-chart.png)
