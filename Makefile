@@ -1,4 +1,4 @@
-.PHONY: setup backend frontend dev test build fixtures
+.PHONY: setup backend frontend dev test lint build fixtures
 
 # One-time setup: backend venv + frontend node_modules
 setup:
@@ -22,6 +22,10 @@ dev:
 test:
 	cd backend && .venv/bin/python -m pytest -q
 	cd frontend && npm run test -- --run
+
+lint:
+	cd backend && .venv/bin/ruff check app tests scripts && .venv/bin/python -m mypy app
+	cd frontend && npm run lint
 
 build:
 	cd frontend && npm run build

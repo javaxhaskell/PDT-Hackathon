@@ -31,10 +31,12 @@ def daily_returns(close: pd.Series) -> pd.Series:
 
 
 def return_correlation(close_a: pd.Series, close_b: pd.Series) -> float:
-    """Pearson correlation of the two daily-return series over the FULL sample.
+    """Pearson correlation of the two daily-return series it is given.
 
     This asks: when stock A moves 1% in a day, does stock B tend to move the
     same way? It is only a first filter — correlation alone is never an edge.
+    Callers must pass FORMATION-period closes only (spec 4.5: the evaluation
+    period is never used to fit correlation, intercept or beta).
     Returns NaN when a correlation cannot be computed (e.g. a flat series);
     a NaN always fails the suitability check downstream.
     """
@@ -74,7 +76,7 @@ def ols_fit(y: np.ndarray, x: np.ndarray) -> tuple[float, float]:
 class RelationshipFit:
     """The frozen formation-period relationship between the two log prices."""
 
-    correlation: float          # full-sample daily-return correlation
+    correlation: float          # formation-period daily-return correlation
     intercept: float            # formation OLS intercept
     beta: float                 # formation OLS slope (hedge ratio)
     beta_h1: float              # beta fit on the first half of the formation period
@@ -121,7 +123,7 @@ def fit_relationship(close_a: pd.Series, close_b: pd.Series) -> RelationshipFit:
         leg_weight_b = 0.0
 
     return RelationshipFit(
-        correlation=return_correlation(close_a, close_b),
+        correlation=return_correlation(close_a.iloc[:split], close_b.iloc[:split]),
         intercept=intercept,
         beta=beta,
         beta_h1=float(beta_h1) if np.isfinite(beta_h1) else float("nan"),

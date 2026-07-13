@@ -2,8 +2,8 @@
  "metadata": {
   "ticker": "NVDA",
   "provider": "yfinance",
-  "captured_at": "2026-07-13T14:07:25+00:00",
-  "content_hash": "sha256:65f509ca4756764bb04b27cce78db1dad6de8b95b149395ba473001c0300fd05"
+  "captured_at": "2026-07-13T14:45:34+00:00",
+  "content_hash": "sha256:a6457f78abe08bcfbfb046db59d30e76cefc42f61da10866380c5d268aad7567"
  },
  "items": [
   {
@@ -15,76 +15,76 @@
    "url": "https://finance.yahoo.com/video/sk-hynix-stock-sees-record-plunge-in-korea-despite-impressive-nasdaq-debut-135319420.html"
   },
   {
-   "source_id": "yf-2cfcd090-01c6-36db-b65c-bd9b0fd910d5",
-   "headline": "This Strategist Says the Tech Wreck Is Your Buy Signal: Micron and SanDisk on Sale?",
-   "snippet": "While the Nasdaq bleeds and investors pile into healthcare and staples at record highs, one Wall Street strategist is shopping the wreckage in memory chips, and her valuation case is harder to dismiss than it looks.",
+   "source_id": "yf-54cfb389-8583-3034-9f47-dfcec3b8ee12",
+   "headline": "After a Stock Split, Is Now the Right Time to Buy CrowdStrike Stock?",
+   "snippet": "CrowdStrike's stock has been strong, helped by accelerating ARR growth and a stock split.",
+   "source": "Motley Fool",
+   "published_at": "2026-07-13T14:37:00Z",
+   "url": "https://www.fool.com/investing/2026/07/13/crowdstrike-faces-a-stock-split-is-now-the-time/"
+  },
+  {
+   "source_id": "yf-cffdfdb7-ab45-34f0-9077-fdd559d77277",
+   "headline": "Tesla Stock Isn\u2019t Cheap Anymore. Buy, Sell or Hold?",
+   "snippet": "Tesla just posted its strongest earnings inflection in years, yet the stock sits at a valuation that prices in a future most investors have never seen before. The real question is whether that future arrives on schedule or falls apart in Q2.",
    "source": "24/7 Wall St.",
-   "published_at": "2026-07-13T13:55:38Z",
-   "url": "https://247wallst.com/investing/2026/07/13/this-strategist-says-the-tech-wreck-is-your-buy-signal-micron-and-sandisk-on-sale/"
+   "published_at": "2026-07-13T14:30:49Z",
+   "url": "https://247wallst.com/investing/2026/07/13/tesla-stock-isnt-cheap-anymore-buy-sell-or-hold/"
   },
   {
-   "source_id": "yf-89019955-7253-3615-a053-0784d586fb27",
-   "headline": "Analyst Price Targets Are Out for SpaceX, and You Won't Believe How High Some of Them Are",
-   "snippet": "It isn't just investors who are bullish about SpaceX; some analysts also have rosy outlooks for the business.",
-   "source": "Motley Fool",
-   "published_at": "2026-07-13T13:50:00Z",
-   "url": "https://www.fool.com/investing/2026/07/13/analyst-price-targets-are-out-for-spacex-and-you-w/"
-  },
-  {
-   "source_id": "yf-c3d215f3-8aa6-331e-b2c1-d5527f8e5e8f",
-   "headline": "Suncor Energy Is Up 30% This Year. Is It Still Worth Buying?",
-   "snippet": "The company's operational improvements make it a compelling stock for many portfolios.",
-   "source": "Motley Fool",
-   "published_at": "2026-07-13T13:50:00Z",
-   "url": "https://www.fool.com/investing/2026/07/13/suncor-energy-is-up-30-this-year-is-it-still-worth/"
-  },
-  {
-   "source_id": "yf-c17e8322-96d5-3918-9b0d-5db7a4bc48c2",
-   "headline": "Coke Is Trading at Its Steepest Premium to Pepsi in Years. History Says This Is What Happens Next.",
-   "snippet": "Coke's strong results back up its premium valuation, but Pepsi may simply be too cheap to ignore.",
-   "source": "Motley Fool",
-   "published_at": "2026-07-13T13:45:00Z",
-   "url": "https://www.fool.com/investing/2026/07/13/coke-is-trading-at-its-steepest-premium-to-pepsi-i/"
-  },
-  {
-   "source_id": "yf-348438c3-afea-3ef6-b220-85dd6a8d2a89",
-   "headline": "Netflix Is Down 43% From Its Most Recent High. History Says This May Happen Next",
-   "snippet": "Can the streaming expert bounce back?",
-   "source": "Motley Fool",
-   "published_at": "2026-07-13T13:35:00Z",
-   "url": "https://www.fool.com/investing/2026/07/13/netflix-is-down-43-from-its-most-recent-high-histo/"
-  },
-  {
-   "source_id": "yf-3556eb8d-c4c9-354d-a2fa-745046b49b24",
-   "headline": "Nvidia Reassures Investors on AI Roadmap",
-   "snippet": "The chipmaker says demand remains strong as new AI products stay on schedule.",
-   "source": "GuruFocus.com",
-   "published_at": "2026-07-13T13:34:20Z",
-   "url": "https://finance.yahoo.com/technology/ai/articles/nvidia-reassures-investors-ai-roadmap-133420236.html"
-  },
-  {
-   "source_id": "yf-18be72d8-2d2b-3d73-b077-6012bb99704c",
-   "headline": "Michael Burry Just Made Big Bets on Sports-Betting Stocks\u2014Why the Odds Are On His Side",
-   "snippet": "Michael Burry built his reputation betting against the crowd at exactly the right moment, and his latest wager targets a beaten-down sector most investors have already written off. The question is whether his contrarian logic holds up where others have already lost their shirts.",
+   "source_id": "yf-c4d07d4c-a900-30f2-9ab2-6db6629556e2",
+   "headline": "Is AI Running Out Of Money?",
+   "snippet": "Tech giants are borrowing at a pace that would have seemed unthinkable just a few years ago, betting that AI revenues will eventually justify the load. But skeptical investors, blocked construction projects, and corporate silence about real returns are raising questions the industry does not yet have answers for.",
    "source": "24/7 Wall St.",
-   "published_at": "2026-07-13T13:31:15Z",
-   "url": "https://247wallst.com/investing/2026/07/13/michael-burry-just-made-big-bets-on-sports-betting-stocks-why-the-odds-are-on-his-side/"
+   "published_at": "2026-07-13T14:24:16Z",
+   "url": "https://247wallst.com/investing/2026/07/13/is-ai-running-out-of-money/"
   },
   {
-   "source_id": "yf-77e989eb-30f4-3cfb-adb0-35e03fcbcca4",
-   "headline": "Prediction: This Is How Tesla Stock Will Do After July 22",
-   "snippet": "The electric vehicle company will post its second-quarter results next week.",
+   "source_id": "yf-fbaddb5f-3e3a-3cab-a276-06e619f57824",
+   "headline": "Amazon Cut 16,000 Jobs While Bezos Predicts AI Will Create a Labor Shortage",
+   "snippet": "Jeff Bezos just told a Paris crowd that AI will cause a labor shortage, five months after his own company cited AI to justify cutting thousands of jobs. The contradiction runs deeper than it looks.",
+   "source": "24/7 Wall St.",
+   "published_at": "2026-07-13T14:23:05Z",
+   "url": "https://247wallst.com/investing/2026/07/13/amazon-cut-16000-jobs-while-bezos-predicts-ai-will-create-a-labor-shortage/"
+  },
+  {
+   "source_id": "yf-fb6b8fef-0bdc-3a61-9f11-919af8c4b6fc",
+   "headline": "Intel, AMD, and Applied Materials Drop 4% as SK Hynix Rout and Oil Spike Hit Chip Stocks",
+   "snippet": "A surprise profit warning out of South Korea sent shockwaves through the chip sector Monday, and the fallout is hitting equipment makers and AI hardware names in ways that point to a much bigger risk lurking beneath a historic rally.",
+   "source": "24/7 Wall St.",
+   "published_at": "2026-07-13T14:22:17Z",
+   "url": "https://247wallst.com/investing/2026/07/13/intel-amd-and-applied-materials-drop-4-as-sk-hynix-rout-and-oil-spike-hit-chip-stocks/"
+  },
+  {
+   "source_id": "yf-f9dd0673-bba3-3a3c-afd6-6215f7437083",
+   "headline": "The Market Cap for Jensen Huang's Nvidia Climbs Past $5 Trillion as Reports of a Kyber Delay Are Dismissed",
+   "snippet": "Nvidia is still the engine that makes AI run, but it's becoming increasingly difficult for it to sustain a stock price rally.",
    "source": "Motley Fool",
-   "published_at": "2026-07-13T13:22:48Z",
-   "url": "https://www.fool.com/investing/2026/07/13/prediction-this-is-how-tesla-stock-will-do-after-j/"
+   "published_at": "2026-07-13T14:22:00Z",
+   "url": "https://www.fool.com/investing/2026/07/13/the-market-cap-for-jensen-huangs-nvidia-climbs-pas/"
   },
   {
-   "source_id": "yf-419e9f52-c9f7-3e54-8820-7140058674ee",
-   "headline": "This Microcap Stock Jumped 159% on NVIDIA AI Deals, But Big Money Is Selling",
-   "snippet": "This microcap stock soared 159% on an Nvidia cooling deal, yet big money hints big investors are quietly cashing out.",
-   "source": "BeInCrypto",
-   "published_at": "2026-07-13T13:13:20Z",
-   "url": "https://beincrypto.com/microcap-stock-ai-rally-money-flow/"
+   "source_id": "yf-ae23a8d6-3a38-346a-9836-02a4d2fd225d",
+   "headline": "Prediction: This Will Be Palantir Technologies' Stock Price in 2030",
+   "snippet": "Palantir Technologies stock may be expensive right now, but its growing share of the AI software platforms market points toward substantial upside.",
+   "source": "Motley Fool",
+   "published_at": "2026-07-13T14:18:00Z",
+   "url": "https://www.fool.com/investing/2026/07/13/prediction-this-will-be-palantir-technologies-stoc/"
+  },
+  {
+   "source_id": "yf-6124e493-2942-3c97-9d16-bc5b09628e7a",
+   "headline": "Forget Hyperscalers: Here Are the AI Gold Rush Winners to Buy Now",
+   "snippet": "While the biggest names in tech burn through a historic spending spree, a small cluster of suppliers is quietly printing cash at a pace that has no precedent in this industry. Understanding who wins at each stage of the AI cycle could completely change how you position your portfolio.",
+   "source": "24/7 Wall St.",
+   "published_at": "2026-07-13T14:11:09Z",
+   "url": "https://247wallst.com/investing/2026/07/13/forget-hyperscalers-here-are-the-ai-gold-rush-winners-to-buy-now/"
+  },
+  {
+   "source_id": "yf-0d79d329-b343-3cdb-b43f-fe1fe6d9d738",
+   "headline": "5 Strong Dividend Stocks You Can Buy Right Now",
+   "snippet": "Chasing high yields in mid-2026 is easy. Finding dividends that businesses can actually sustain is the harder problem, and these five names across REITs, midstream, and fintech clear that bar while still offering yields near 5%.",
+   "source": "24/7 Wall St.",
+   "published_at": "2026-07-13T14:03:20Z",
+   "url": "https://247wallst.com/investing/2026/07/13/5-strong-dividend-stocks-you-can-buy-right-now/"
   }
  ]
 }

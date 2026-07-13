@@ -110,3 +110,21 @@ def test_cards_show_values_and_thresholds(good_pair):
     joined = " ".join(worked.detail_lines)
     assert str(config.MIN_TRADES) in joined
     assert f"{config.MAX_DRAWDOWN_LIMIT:.0%}" in joined
+
+
+def test_correlation_uses_formation_period_only(good_pair):
+    # Spec 4.5: the evaluation period is never used to fit correlation.
+    # Perturbing only the held-out evaluation rows must leave the reported
+    # correlation byte-identical.
+    from app.quant.relationship import fit_relationship, formation_split
+
+    df_a, df_b = good_pair
+    base = fit_relationship(df_a["close"], df_b["close"])
+
+    split = formation_split(len(df_a))
+    shocked_a = df_a.copy()
+    shocked_a.iloc[split:, shocked_a.columns.get_loc("close")] *= 1.5
+    shocked = fit_relationship(shocked_a["close"], df_b["close"])
+
+    assert shocked.correlation == base.correlation
+    assert shocked.beta == base.beta and shocked.intercept == base.intercept

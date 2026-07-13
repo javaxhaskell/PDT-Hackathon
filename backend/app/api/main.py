@@ -400,6 +400,13 @@ def analyse(
             f"({history_a.exchange} vs {history_b.exchange}); their trading "
             "calendars may differ."
         )
+    for symbol, history in ((ticker_a, history_a), (ticker_b, history_b)):
+        if history.currency_guessed:
+            warnings.append(
+                f"The data provider did not report a quote currency for {symbol}; "
+                "USD was assumed, so the same-currency check could not be fully "
+                "verified for this pair."
+            )
 
     # 7. Quant engine (lazy seam). The response never waits for DeepSeek.
     quant = run_quant(

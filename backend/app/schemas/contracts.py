@@ -7,8 +7,8 @@ workarounds. Only the orchestrator may change this file.
 
 from __future__ import annotations
 
-from enum import Enum
-from typing import Literal, Optional
+from enum import StrEnum
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -17,24 +17,24 @@ from pydantic import BaseModel, Field
 # ---------------------------------------------------------------------------
 
 
-class RiskProfile(str, Enum):
+class RiskProfile(StrEnum):
     CONSERVATIVE = "conservative"
     BALANCED = "balanced"
     AGGRESSIVE = "aggressive"
 
 
-class Lookback(str, Enum):
+class Lookback(StrEnum):
     ONE_YEAR = "1y"
     TWO_YEARS = "2y"
     THREE_YEARS = "3y"
 
 
-class DataMode(str, Enum):
+class DataMode(StrEnum):
     LIVE = "live"
     FIXTURE = "fixture"
 
 
-class FinalState(str, Enum):
+class FinalState(StrEnum):
     INSUFFICIENT_DATA = "INSUFFICIENT_DATA"
     UNSUITABLE_PAIR = "UNSUITABLE_PAIR"
     HISTORICAL_SCREEN_FAILED = "HISTORICAL_SCREEN_FAILED"
@@ -44,13 +44,13 @@ class FinalState(str, Enum):
     PROVIDER_ERROR = "PROVIDER_ERROR"
 
 
-class CardStatus(str, Enum):
+class CardStatus(StrEnum):
     PASS = "pass"
     CAUTION = "caution"
     FAIL = "fail"
 
 
-class NarrativeClassification(str, Enum):
+class NarrativeClassification(StrEnum):
     NO_OBVIOUS_NEWS_EXPLANATION = "NO_OBVIOUS_NEWS_EXPLANATION"
     POSSIBLE_COMPANY_SPECIFIC_EXPLANATION = "POSSIBLE_COMPANY_SPECIFIC_EXPLANATION"
     MIXED = "MIXED"
@@ -58,13 +58,13 @@ class NarrativeClassification(str, Enum):
     AI_UNAVAILABLE = "AI_UNAVAILABLE"
 
 
-class NarrativeConfidence(str, Enum):
+class NarrativeConfidence(StrEnum):
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
 
 
-class AiStatus(str, Enum):
+class AiStatus(StrEnum):
     OK = "ok"
     UNAVAILABLE = "unavailable"
     NOT_CONFIGURED = "not_configured"
@@ -72,7 +72,7 @@ class AiStatus(str, Enum):
     RECORDED = "recorded"  # replayed fixture response, not live AI
 
 
-class ExitReason(str, Enum):
+class ExitReason(StrEnum):
     TARGET = "target"          # |z| fell to exit threshold
     STOP = "stop"              # |z| reached stop threshold
     TIME = "time"              # max holding days reached
@@ -113,9 +113,9 @@ class DataMetadata(BaseModel):
     currency: str
     n_common_observations: int
     is_fixture: bool
-    fixture_captured_at: Optional[str] = None  # ISO-8601, fixture mode only
-    exchange_a: Optional[str] = None
-    exchange_b: Optional[str] = None
+    fixture_captured_at: str | None = None  # ISO-8601, fixture mode only
+    exchange_a: str | None = None
+    exchange_b: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -152,20 +152,20 @@ class SignalStats(BaseModel):
 class TradeRecord(BaseModel):
     signal_date: str
     entry_date: str                 # execution at this day's open
-    exit_signal_date: Optional[str] = None
-    exit_date: Optional[str] = None
+    exit_signal_date: str | None = None
+    exit_date: str | None = None
     direction: Literal["SELL_A_BUY_B", "BUY_A_SELL_B"]
     entry_beta: float
     qty_a: float                    # signed units of notional (per 1 gross)
     qty_b: float
     entry_price_a: float
     entry_price_b: float
-    exit_price_a: Optional[float] = None
-    exit_price_b: Optional[float] = None
+    exit_price_a: float | None = None
+    exit_price_b: float | None = None
     costs: float                    # total costs, fraction of gross exposure
-    exit_reason: Optional[ExitReason] = None
-    holding_days: Optional[int] = None
-    pnl: Optional[float] = None     # after-cost, fraction of gross exposure
+    exit_reason: ExitReason | None = None
+    holding_days: int | None = None
+    pnl: float | None = None     # after-cost, fraction of gross exposure
 
 
 class BacktestMetrics(BaseModel):
@@ -173,16 +173,16 @@ class BacktestMetrics(BaseModel):
     net_profit: float               # after costs, fraction of gross exposure
     net_return: float               # compounded evaluation-period return
     gross_return: float             # before costs
-    win_rate: Optional[float] = None
-    avg_win: Optional[float] = None
-    avg_loss: Optional[float] = None
-    profit_factor: Optional[float] = None
+    win_rate: float | None = None
+    avg_win: float | None = None
+    avg_loss: float | None = None
+    profit_factor: float | None = None
     max_drawdown: float
-    avg_holding_days: Optional[float] = None
+    avg_holding_days: float | None = None
     total_costs: float
     screen_passed: bool
     limited_evidence: bool          # true when 5-9 completed trades
-    worst_trade_pnl: Optional[float] = None
+    worst_trade_pnl: float | None = None
 
 
 class SizingLeg(BaseModel):
@@ -195,7 +195,7 @@ class SizingLeg(BaseModel):
 
 class SizingResult(BaseModel):
     sized: bool
-    reason: Optional[str] = None    # why no size, when sized is false
+    reason: str | None = None    # why no size, when sized is false
     legs: list[SizingLeg] = []
     gross_exposure: float = 0.0
     net_exposure: float = 0.0
@@ -225,7 +225,7 @@ class EvidenceCard(BaseModel):
 
 class SeriesPoint(BaseModel):
     date: str
-    value: Optional[float] = None
+    value: float | None = None
 
 
 class NormalisedPricesChart(BaseModel):
@@ -268,16 +268,16 @@ class Charts(BaseModel):
 
 class AnalyseResponse(BaseModel):
     request: AnalyseRequest
-    data: Optional[DataMetadata] = None
+    data: DataMetadata | None = None
     state: FinalState
     explanation: str                    # one sentence, plain English
-    relationship: Optional[RelationshipStats] = None
-    signal: Optional[SignalStats] = None
-    backtest: Optional[BacktestMetrics] = None
+    relationship: RelationshipStats | None = None
+    signal: SignalStats | None = None
+    backtest: BacktestMetrics | None = None
     trades: list[TradeRecord] = []
-    sizing: Optional[SizingResult] = None
+    sizing: SizingResult | None = None
     evidence_cards: list[EvidenceCard] = []
-    charts: Optional[Charts] = None
+    charts: Charts | None = None
     warnings: list[str] = []
     methodology_version: str
 
@@ -291,13 +291,13 @@ class QuantResult(BaseModel):
 
     state: FinalState
     explanation: str
-    relationship: Optional[RelationshipStats] = None
-    signal: Optional[SignalStats] = None
-    backtest: Optional[BacktestMetrics] = None
+    relationship: RelationshipStats | None = None
+    signal: SignalStats | None = None
+    backtest: BacktestMetrics | None = None
     trades: list[TradeRecord] = []
-    sizing: Optional[SizingResult] = None
+    sizing: SizingResult | None = None
     evidence_cards: list[EvidenceCard] = []
-    charts: Optional[Charts] = None
+    charts: Charts | None = None
     warnings: list[str] = []
 
 
@@ -310,10 +310,10 @@ class NewsItem(BaseModel):
     source_id: str
     ticker: str
     headline: str
-    snippet: Optional[str] = None
+    snippet: str | None = None
     source: str
     published_at: str                   # ISO-8601
-    url: Optional[str] = None
+    url: str | None = None
 
 
 class EvidenceClaim(BaseModel):
@@ -323,18 +323,18 @@ class EvidenceClaim(BaseModel):
 
 class NarrativeResponse(BaseModel):
     ai_status: AiStatus
-    model: Optional[str] = None
+    model: str | None = None
     classification: NarrativeClassification
-    confidence: Optional[NarrativeConfidence] = None
-    summary_a: Optional[str] = None
-    summary_b: Optional[str] = None
-    shared_story: Optional[str] = None
+    confidence: NarrativeConfidence | None = None
+    summary_a: str | None = None
+    summary_b: str | None = None
+    shared_story: str | None = None
     risk_flags: list[str] = []
     evidence: list[EvidenceClaim] = []
-    explanation: Optional[str] = None
+    explanation: str | None = None
     news_items: list[NewsItem] = []     # the exact items supplied to the model
     elevated_news_risk: bool = False
-    recorded_at: Optional[str] = None   # set when ai_status == "recorded"
+    recorded_at: str | None = None   # set when ai_status == "recorded"
 
 
 # ---------------------------------------------------------------------------
@@ -351,8 +351,8 @@ class HealthResponse(BaseModel):
 class SymbolSearchResult(BaseModel):
     symbol: str
     name: str
-    exchange: Optional[str] = None
-    currency: Optional[str] = None
+    exchange: str | None = None
+    currency: str | None = None
 
 
 class SymbolSearchResponse(BaseModel):
@@ -362,4 +362,4 @@ class SymbolSearchResponse(BaseModel):
 class ApiError(BaseModel):
     error: str                          # machine-readable code
     message: str                        # human-readable, plain English
-    details: Optional[dict] = None
+    details: dict | None = None

@@ -99,7 +99,7 @@ export default function TradePlanPanel({
         <Stat
           label="Estimated cost"
           value={fmtMoney(sizing.estimated_cost, currency)}
-          hint="All four legs (entry and exit)"
+          hint="All four legs — entry now, exit estimated at current prices"
         />
         <Stat
           label="Stress loss vs budget"

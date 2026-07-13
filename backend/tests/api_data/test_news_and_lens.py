@@ -43,12 +43,14 @@ class TestNewsFiltering:
         kept = filter_news_items(items, as_of=AS_OF)
         assert [i.source_id for i in kept] == ["yf-ko-0"]
 
-    def test_unparsable_published_at_is_kept(self):
+    def test_unparsable_published_at_is_dropped(self):
+        # The spec requires items from the last 30 calendar days; an undated
+        # item cannot prove it qualifies, so it is dropped.
         bad = make_news_item("KO", 0)
         bad = bad.model_copy(update={"published_at": "not-a-date"})
         good = make_news_item("KO", 1)
         kept = filter_news_items([bad, good], as_of=AS_OF)
-        assert {i.source_id for i in kept} == {"yf-ko-0", "yf-ko-1"}
+        assert {i.source_id for i in kept} == {"yf-ko-1"}
 
     def test_headline_normalisation(self):
         assert normalise_headline("  Coke,  RALLIES!  ") == "coke rallies"

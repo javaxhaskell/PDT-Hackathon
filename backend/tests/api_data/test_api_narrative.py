@@ -163,3 +163,35 @@ class TestRecordedNarrative:
         assert body["ai_status"] == "recorded"
         assert body["model"] == "deepseek-v4-flash"
         assert body["recorded_at"] == "2026-07-13T14:00:00+00:00"
+
+    def test_reversed_order_request_swaps_summaries(self, tmp_path):
+        # A fixture recorded for (KO, PEP) answered for a (PEP, KO) request
+        # must swap summary_a/summary_b so each summary matches its company.
+        from app.ai.deepseek import RecordedNarrativeProvider
+
+        reply = valid_reply(
+            summary_a="About KO: routine coverage.",
+            summary_b="About PEP: routine coverage.",
+        )
+        fixture = {
+            "metadata": {
+                "pair": ["KO", "PEP"],
+                "model": "deepseek-v4-flash",
+                "captured_at": "2026-07-13T14:00:00+00:00",
+                "content_hash": canonical_content_hash(reply),
+            },
+            "reply": reply,
+        }
+        (tmp_path / "narrative_KO_PEP.json").write_text(json.dumps(fixture))
+
+        provider = RecordedNarrativeProvider.find(tmp_path, "PEP", "KO")
+        assert provider is not None
+        completion = provider.complete("prompt", {})
+        assert completion.reply["summary_a"] == "About PEP: routine coverage."
+        assert completion.reply["summary_b"] == "About KO: routine coverage."
+
+        same_order = RecordedNarrativeProvider.find(tmp_path, "KO", "PEP")
+        assert same_order is not None
+        assert same_order.complete("prompt", {}).reply["summary_a"] == (
+            "About KO: routine coverage."
+        )

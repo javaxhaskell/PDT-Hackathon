@@ -99,3 +99,16 @@ class TestFixtureNews:
         first = FixtureNewsProvider().get_news("PEP")
         second = FixtureNewsProvider().get_news("PEP")
         assert [i.model_dump() for i in first] == [i.model_dump() for i in second]
+
+
+class TestMetadataIntegrity:
+    def test_tampered_metadata_is_refused(self, fixtures_copy):
+        # The hash also covers metadata, so editing the recorded currency
+        # (without touching a single price) must be refused too.
+        path = fixtures_copy / "prices_KO.json"
+        payload = json.loads(path.read_text())
+        payload["metadata"]["currency"] = "GBP"
+        path.write_text(json.dumps(payload))
+        provider = FixturePriceProvider(fixtures_copy)
+        with pytest.raises(ProviderError, match="integrity"):
+            provider.get_history("KO", "2y")

@@ -138,12 +138,12 @@ describe("PairScope happy path", () => {
     // --- correctly signed quantities from the sizing legs -------------------
     const legAll = screen.getByTestId("leg-ALL");
     expect(within(legAll).getByText("SELL")).toBeInTheDocument();
-    expect(legAll).toHaveTextContent(/4 ALL shares/);
+    expect(legAll).toHaveTextContent(/6 ALL shares/);
     expect(legAll).not.toHaveTextContent(/BUY/);
 
     const legTrv = screen.getByTestId("leg-TRV");
     expect(within(legTrv).getByText("BUY")).toBeInTheDocument();
-    expect(legTrv).toHaveTextContent(/2 TRV shares/);
+    expect(legTrv).toHaveTextContent(/3 TRV shares/);
     expect(legTrv).not.toHaveTextContent(/SELL/);
 
     // --- changing the risk profile triggers a new analyse call --------------

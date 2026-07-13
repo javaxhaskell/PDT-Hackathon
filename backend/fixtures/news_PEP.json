@@ -2,8 +2,8 @@
  "metadata": {
   "ticker": "PEP",
   "provider": "yfinance",
-  "captured_at": "2026-07-13T14:07:25+00:00",
-  "content_hash": "sha256:3e49e40050ef036fe09812e23009d12fea86da590301654aca03a2e124e0de54"
+  "captured_at": "2026-07-13T14:45:34+00:00",
+  "content_hash": "sha256:1c1e1658c97c6171e6596f77f24f9dab926dbaf7e771827fed61011d4da9ac4d"
  },
  "items": [
   {
@@ -21,6 +21,14 @@
    "source": "Trefis",
    "published_at": "2026-07-13T12:53:55Z",
    "url": "https://www.trefis.com/articles/606937/is-pepsi-stock-hiding-a-deeper-u-s-problem/2026-07-13"
+  },
+  {
+   "source_id": "yf-47564e94-9dea-34d6-976e-34007785b271",
+   "headline": "Rockstar Energy\u2019s CMO on turning latent brand value into market share",
+   "snippet": "The brand is activating around sports and music to connect with consumers who prefer traditional energy drinks to sister beverages Celsius and Alani Nu.",
+   "source": "Marketing Dive",
+   "published_at": "2026-07-13T10:00:00Z",
+   "url": "https://www.marketingdive.com/news/rockstar-energy-cmo-on-turning-latent-brand-value-into-market-share/824917/"
   },
   {
    "source_id": "yf-459de7b1-239b-3e2b-b39d-f5e5b6240529",
@@ -77,14 +85,6 @@
    "source": "Motley Fool",
    "published_at": "2026-07-10T22:35:00Z",
    "url": "https://www.fool.com/investing/2026/07/10/even-with-gold-below-4150-and-bitcoin-under-64000/"
-  },
-  {
-   "source_id": "yf-fcb480df-00a0-3a52-84f8-5c1b3d7fb761",
-   "headline": "PepsiCo\u2019s $200 Billion Stability Play Is Attracting Dividend Investors",
-   "snippet": "PepsiCo has now raised its dividend for more consecutive years than most investors have been alive, and the streak is drawing serious attention from income-focused portfolios hunting for shelter in a volatile market.",
-   "source": "24/7 Wall St.",
-   "published_at": "2026-07-10T20:23:48Z",
-   "url": "https://247wallst.com/investing/2026/07/10/pepsicos-200-billion-stability-play-is-attracting-dividend-investors/"
   }
  ]
 }

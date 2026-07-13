@@ -1,11 +1,8 @@
-import { EDUCATIONAL_DISCLAIMER, STANDING_WARNINGS } from "@/lib/copy";
+import { EDUCATIONAL_DISCLAIMER } from "@/lib/copy";
 
 export default function WarningsFooter({ warnings }: { warnings: string[] }) {
-  // De-duplicate: backend warnings first, then any standing ones not covered.
-  const merged = [
-    ...warnings,
-    ...STANDING_WARNINGS.filter((w) => !warnings.includes(w)),
-  ];
+  // The backend is the single source of warnings (it always includes the
+  // standard list); the frontend adds only its permanent disclaimer.
   return (
     <footer
       aria-label="Warnings and assumptions"
@@ -15,7 +12,7 @@ export default function WarningsFooter({ warnings }: { warnings: string[] }) {
         Warnings and assumptions
       </h3>
       <ul className="mt-3 list-disc space-y-1 pl-5 text-xs leading-relaxed text-muted">
-        {merged.map((w) => (
+        {warnings.map((w) => (
           <li key={w}>{w}</li>
         ))}
       </ul>

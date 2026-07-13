@@ -4,33 +4,42 @@ import EquityView from "@/components/charts/EquityView";
 import NormalisedPricesView from "@/components/charts/NormalisedPricesView";
 import SpreadChartView from "@/components/charts/SpreadChartView";
 import { fmtPct } from "@/lib/format";
-import type { Charts } from "@/lib/types";
+import type { Charts, SignalStats } from "@/lib/types";
 
 export default function ChartsSection({
   charts,
   tickerA,
   tickerB,
   maxDrawdown,
+  signal,
 }: {
   charts: Charts;
   tickerA: string;
   tickerB: string;
   maxDrawdown?: number | null;
+  signal?: SignalStats | null;
 }) {
+  // Thresholds come from the backend response, never hard-coded here.
+  const entryZ = signal?.entry_z;
+  const stopZ = signal?.stop_z;
   return (
     <section aria-label="Charts" className="space-y-4">
       <div className="rounded-xl border border-edge bg-surface p-5">
         <h3 className="text-sm font-semibold text-ink">Spread and signal</h3>
         <p className="mt-1 text-xs text-muted">
-          Distance from the fitted relationship, its rolling mean, the entry
-          bands at plus and minus 2 standard deviations and the stop bands at
-          plus and minus 3.5. Dots mark historical trade entries and exits.
+          Distance from the fitted relationship, its rolling mean
+          {entryZ !== undefined && stopZ !== undefined
+            ? `, the entry bands at plus and minus ${entryZ} standard deviations and the stop bands at plus and minus ${stopZ}`
+            : " and its entry and stop bands"}
+          . Dots mark historical trade entries and exits.
         </p>
         <div className="mt-3">
           <SpreadChartView
             chart={charts.spread}
             tickerA={tickerA}
             tickerB={tickerB}
+            entryZ={entryZ}
+            stopZ={stopZ}
           />
         </div>
       </div>

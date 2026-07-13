@@ -51,6 +51,8 @@ _COMPANY_NAMES = {
     "KO": "The Coca-Cola Company",
     "PEP": "PepsiCo, Inc.",
     "NVDA": "NVIDIA Corporation",
+    "ALL": "The Allstate Corporation",
+    "TRV": "The Travelers Companies, Inc.",
 }
 
 

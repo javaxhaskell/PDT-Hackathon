@@ -130,8 +130,10 @@ def size_position(
     notional_b = shares_b * price_b
     gross = notional_a + notional_b
     stress = stress_fraction * gross
-    # Costs on both ENTRY legs (exit costs depend on unknown future prices).
-    estimated_cost = cost_bps * 1e-4 * gross
+    # Costs on all FOUR legs: both entry legs now, both exit legs later.
+    # Exit prices are unknown, so the exit half is estimated at current
+    # prices — the UI labels it as an estimate.
+    estimated_cost = 2.0 * cost_bps * 1e-4 * gross
 
     side_a: Literal["BUY", "SELL"]
     side_b: Literal["BUY", "SELL"]
@@ -197,7 +199,10 @@ def _whole_share_search(
             if gross > allowed_gross * (1 + _EPS):
                 continue
             ratio_error = abs(math.log((qty_a * price_a) / (qty_b * price_b)) - target_log_ratio)
-            key = (ratio_error, -gross, qty_a)
+            # Quantise the error so mathematically identical ratios (e.g. 4/2
+            # and 6/3 shares) compare as true ties instead of being separated
+            # by floating-point noise; the tie then prefers the larger gross.
+            key = (round(ratio_error, 9), -gross, qty_a)
             if best_key is None or key < best_key:
                 best, best_key = (qty_a, qty_b), key
 

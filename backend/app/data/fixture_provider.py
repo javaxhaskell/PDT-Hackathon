@@ -36,7 +36,14 @@ LOOKBACK_ROWS = {"1y": 252, "2y": 504, "3y": 756}
 
 
 def _load_verified(path: Path, payload_key: str, ticker: str) -> dict:
-    """Load a fixture file and verify its content hash; refuse corruption."""
+    """Load a fixture file and verify its content hash; refuse corruption.
+
+    The hash covers BOTH the content array and the metadata (minus the
+    hash field itself), so a tampered currency, capture time or exchange
+    is refused just like tampered prices. Required metadata fields are
+    validated here so a broken fixture fails with a clear message rather
+    than a KeyError later.
+    """
     try:
         payload = json.loads(path.read_text())
         metadata = payload["metadata"]
@@ -48,10 +55,18 @@ def _load_verified(path: Path, payload_key: str, ticker: str) -> dict:
             ticker=ticker,
         ) from exc
     expected = metadata.get("content_hash")
-    if not expected or canonical_content_hash(content) != expected:
+    metadata_sans_hash = {k: v for k, v in metadata.items() if k != "content_hash"}
+    hashed = canonical_content_hash({"metadata": metadata_sans_hash, payload_key: content})
+    if not expected or hashed != expected:
         raise ProviderError(
             f"Fixture file '{path.name}' failed its integrity check (content hash "
             "mismatch). The file may be corrupted or hand-edited; refusing to use it.",
+            ticker=ticker,
+        )
+    if not metadata.get("captured_at"):
+        raise ProviderError(
+            f"Fixture file '{path.name}' is missing its 'captured_at' metadata; "
+            "re-record it with scripts/record_fixtures.py.",
             ticker=ticker,
         )
     return payload

@@ -1,10 +1,15 @@
-"""Record frozen fixture snapshots from live yfinance responses.
+"""Record frozen fixture snapshots from live provider responses.
 
 Usage:
     .venv/bin/python scripts/record_fixtures.py
+    .venv/bin/python scripts/record_fixtures.py --narrative ALL TRV
 
 Writes prices_<TICKER>.json and news_<TICKER>.json into backend/fixtures/
-for the demo pairs. Fixtures are real recorded data — never hand-edited.
+for the demo pairs. With --narrative and a configured DEEPSEEK_API_KEY it
+also records a real DeepSeek reply as narrative_<A>_<B>.json for the
+offline demo (labelled "Recorded AI response" in the UI). Fixtures are
+real recorded data — never hand-edited. The content hash covers both the
+data and the metadata (minus the hash field itself).
 """
 
 from __future__ import annotations
@@ -12,7 +17,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import yfinance
@@ -25,6 +30,13 @@ PERIOD = "3y"  # superset; shorter lookbacks slice from this
 def canonical_hash(payload: object) -> str:
     blob = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(blob.encode("utf-8")).hexdigest()
+
+
+def sealed(metadata: dict, payload_key: str, content: object) -> dict:
+    """Stamp the content hash over metadata + content (matches _load_verified)."""
+    metadata = dict(metadata)
+    metadata["content_hash"] = canonical_hash({"metadata": metadata, payload_key: content})
+    return {"metadata": metadata, payload_key: content}
 
 
 def record_prices(ticker: str) -> None:
@@ -41,19 +53,19 @@ def record_prices(ticker: str) -> None:
         o, c = float(row["Open"]), float(row["Close"])
         rows.append({"date": str(date.date()), "open": round(o, 6), "close": round(c, 6)})
 
-    payload = {
-        "metadata": {
+    payload = sealed(
+        {
             "ticker": ticker,
             "provider": "yfinance",
-            "captured_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "captured_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "last_market_date": rows[-1]["date"],
             "currency": currency,
             "exchange": exchange,
             "auto_adjust": True,
-            "content_hash": canonical_hash(rows),
         },
-        "rows": rows,
-    }
+        "rows",
+        rows,
+    )
     out = FIXTURES_DIR / f"prices_{ticker}.json"
     out.write_text(json.dumps(payload, indent=1))
     print(f"wrote {out.name}: {len(rows)} rows, last={rows[-1]['date']}, {currency}")
@@ -85,22 +97,65 @@ def record_news(ticker: str) -> None:
                 "url": url,
             }
         )
-    payload = {
-        "metadata": {
+    payload = sealed(
+        {
             "ticker": ticker,
             "provider": "yfinance",
-            "captured_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-            "content_hash": canonical_hash(items),
+            "captured_at": datetime.now(UTC).isoformat(timespec="seconds"),
         },
-        "items": items,
-    }
+        "items",
+        items,
+    )
     out = FIXTURES_DIR / f"news_{ticker}.json"
     out.write_text(json.dumps(payload, indent=1))
     print(f"wrote {out.name}: {len(items)} items")
 
 
+def record_narrative(ticker_a: str, ticker_b: str) -> None:
+    """Record a REAL DeepSeek reply for the pair as narrative_<A>_<B>.json.
+
+    Requires DEEPSEEK_API_KEY. The recorded file preserves the model name
+    and capture time; the UI labels replays 'Recorded AI response'. This
+    never fabricates a reply — without a key it refuses to record.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from app import config
+    from app.ai import lens
+    from app.ai.deepseek import DeepSeekNarrativeProvider
+    from app.data.fixture_provider import FixtureNewsProvider
+
+    if not config.DEEPSEEK_API_KEY:
+        raise SystemExit(
+            "DEEPSEEK_API_KEY is not configured; refusing to record a narrative "
+            "fixture (a recorded AI response must be real, never fabricated)."
+        )
+    a, b = ticker_a.strip().upper(), ticker_b.strip().upper()
+    news = FixtureNewsProvider(FIXTURES_DIR)
+    items_a, items_b = news.get_news(a), news.get_news(b)
+    provider = DeepSeekNarrativeProvider()
+    payload = lens.build_payload(a, items_a, b, items_b)
+    completion = provider.complete(lens.SYSTEM_PROMPT, payload)
+
+    out_payload = {
+        "metadata": {
+            "ticker_a": a,
+            "ticker_b": b,
+            "model": completion.model,
+            "captured_at": datetime.now(UTC).isoformat(timespec="seconds"),
+            "content_hash": canonical_hash(completion.reply),
+        },
+        "reply": completion.reply,
+    }
+    out = FIXTURES_DIR / f"narrative_{a}_{b}.json"
+    out.write_text(json.dumps(out_payload, indent=1))
+    print(f"wrote {out.name}: model={completion.model}")
+
+
 if __name__ == "__main__":
     FIXTURES_DIR.mkdir(exist_ok=True)
+    if len(sys.argv) >= 4 and sys.argv[1] == "--narrative":
+        record_narrative(sys.argv[2], sys.argv[3])
+        raise SystemExit(0)
     for ticker in TICKERS:
         try:
             record_prices(ticker)

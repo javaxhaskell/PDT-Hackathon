@@ -52,6 +52,7 @@ class PriceHistory:
     retrieved_at: str  # ISO-8601 UTC
     is_fixture: bool
     fixture_captured_at: str | None = None
+    currency_guessed: bool = False  # provider reported no currency; USD assumed
 
 
 class PriceProvider(Protocol):
@@ -129,8 +130,9 @@ def filter_news_items(
       ``as_of``. When ``as_of`` is None it defaults to the newest parsed
       ``published_at`` among the supplied items (deterministic for
       fixtures) and falls back to the current UTC time.
-    - Items with an unparsable ``published_at`` are KEPT (per spec) but a
-      note is logged; they sort after dated items.
+    - Items with an unparsable ``published_at`` are DROPPED (the spec
+      requires items from the last 30 calendar days, and an undated item
+      cannot prove it qualifies); each drop is logged.
     - Returns at most ``max_items`` items, newest first (deterministic
       tie-break on source_id).
     """
@@ -161,13 +163,16 @@ def filter_news_items(
     for item, dt in parsed:
         if len(kept) >= max_items:
             break
-        if dt is not None and (as_of - dt) > window:
-            continue
         if dt is None:
             logger.info(
-                "news item %s has an unparsable published_at; keeping it anyway",
+                "news item %s has an unparsable published_at; dropping it "
+                "(cannot verify the %s-day window)",
                 item.source_id,
+                window_days,
             )
+            continue
+        if (as_of - dt) > window:
+            continue
         headline_key = normalise_headline(item.headline)
         if item.source_id in seen_ids or headline_key in seen_headlines:
             continue

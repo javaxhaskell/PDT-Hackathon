@@ -205,6 +205,7 @@ export default function Home() {
               tickerA={displayA}
               tickerB={displayB}
               maxDrawdown={result.backtest?.max_drawdown}
+              signal={result.signal}
             />
           )}
 

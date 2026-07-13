@@ -37,6 +37,14 @@ def _now_utc_iso() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+# A "1y" calendar fetch yields only ~250-251 trading rows — below the
+# spec's 252-observation minimum — so each lookback fetches the next
+# period up and slices the most recent rows, mirroring the fixture
+# provider (1y=252, 2y=504, 3y=756 rows).
+_FETCH_PERIOD = {"1y": "2y", "2y": "3y", "3y": "5y"}
+_TARGET_ROWS = {"1y": 252, "2y": 504, "3y": 756}
+
+
 class YFinancePriceProvider:
     """Daily adjusted open/close prices from yfinance with a 15-minute cache."""
 
@@ -52,7 +60,11 @@ class YFinancePriceProvider:
 
         try:
             yf_ticker = yfinance.Ticker(symbol)
-            hist = yf_ticker.history(period=lookback, interval="1d", auto_adjust=True)
+            hist = yf_ticker.history(
+                period=_FETCH_PERIOD.get(lookback, lookback),
+                interval="1d",
+                auto_adjust=True,
+            )
         except Exception as exc:
             logger.warning("yfinance history fetch failed for %s: %r", symbol, exc)
             raise ProviderError(
@@ -75,8 +87,11 @@ class YFinancePriceProvider:
             index = index.tz_localize(None)
         df.index = index.normalize()
         df = df.sort_index()
+        target_rows = _TARGET_ROWS.get(lookback)
+        if target_rows is not None and len(df) > target_rows:
+            df = df.iloc[-target_rows:]
 
-        currency, exchange = self._fast_info(yf_ticker, symbol)
+        currency, exchange, currency_guessed = self._fast_info(yf_ticker, symbol)
         history = PriceHistory(
             df=df,
             currency=currency,
@@ -86,13 +101,19 @@ class YFinancePriceProvider:
             retrieved_at=_now_utc_iso(),
             is_fixture=False,
             fixture_captured_at=None,
+            currency_guessed=currency_guessed,
         )
         self._cache.set(cache_key, history)
         return history
 
     @staticmethod
-    def _fast_info(yf_ticker: yfinance.Ticker, symbol: str) -> tuple[str, str | None]:
-        """Currency/exchange via fast_info; documented fallback to USD/None."""
+    def _fast_info(yf_ticker: yfinance.Ticker, symbol: str) -> tuple[str, str | None, bool]:
+        """Currency/exchange via fast_info.
+
+        When the provider reports no currency we assume USD but flag it as
+        guessed so the API can warn the user — a guessed currency must never
+        silently pass the cross-currency rejection check as verified fact.
+        """
         currency: str | None = None
         exchange: str | None = None
         try:
@@ -102,9 +123,9 @@ class YFinancePriceProvider:
         except Exception as exc:
             logger.info("fast_info unavailable for %s: %r", symbol, exc)
         if not currency:
-            logger.info("currency missing for %s; falling back to USD", symbol)
-            currency = "USD"
-        return currency, exchange
+            logger.info("currency missing for %s; assuming USD (flagged as guessed)", symbol)
+            return "USD", exchange, True
+        return currency, exchange, False
 
 
 class YFinanceNewsProvider:

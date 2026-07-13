@@ -98,11 +98,18 @@ export default function SpreadChartView({
   chart,
   tickerA,
   tickerB,
+  entryZ,
+  stopZ,
 }: {
   chart: SpreadChart;
   tickerA: string;
   tickerB: string;
+  entryZ?: number;
+  stopZ?: number;
 }) {
+  // Band labels use the server-supplied thresholds when available.
+  const entryLabel = entryZ !== undefined ? String(entryZ) : "entry";
+  const stopLabel = stopZ !== undefined ? String(stopZ) : "stop";
   const rows = buildRows(chart);
   const boundary =
     rows.find((r) => r.date >= chart.formation_end)?.date ?? rows[0]?.date;
@@ -177,7 +184,7 @@ export default function SpreadChartView({
           />
           <Line
             dataKey="upperStop"
-            name="Stop band (+3.5 sd)"
+            name={`Stop band (+${stopLabel} sd)`}
             stroke={CHART_COLORS.stopBand}
             strokeDasharray="2 4"
             dot={false}
@@ -185,7 +192,7 @@ export default function SpreadChartView({
           />
           <Line
             dataKey="lowerStop"
-            name="Stop band (-3.5 sd)"
+            name={`Stop band (-${stopLabel} sd)`}
             stroke={CHART_COLORS.stopBand}
             strokeDasharray="2 4"
             dot={false}
@@ -194,7 +201,7 @@ export default function SpreadChartView({
           />
           <Line
             dataKey="upperEntry"
-            name="Entry band (+2 sd)"
+            name={`Entry band (+${entryLabel} sd)`}
             stroke={CHART_COLORS.entryBand}
             strokeDasharray="6 4"
             dot={false}
@@ -202,7 +209,7 @@ export default function SpreadChartView({
           />
           <Line
             dataKey="lowerEntry"
-            name="Entry band (-2 sd)"
+            name={`Entry band (-${entryLabel} sd)`}
             stroke={CHART_COLORS.entryBand}
             strokeDasharray="6 4"
             dot={false}
@@ -211,7 +218,7 @@ export default function SpreadChartView({
           />
           <Line
             dataKey="mean"
-            name="Rolling mean (60d)"
+            name="Rolling mean"
             stroke={CHART_COLORS.mean}
             strokeDasharray="4 4"
             dot={false}

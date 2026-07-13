@@ -25,7 +25,9 @@ def test_whole_share_sizing_stays_inside_capital_and_risk(actionable_pair, profi
     assert sizing.risk_budget == pytest.approx(capital * limits["max_stress_fraction"])
     assert sizing.max_gross_allowed == pytest.approx(capital * limits["max_gross_fraction"])
     assert sizing.remaining_cash == pytest.approx(capital - sizing.gross_exposure)
-    assert sizing.estimated_cost == pytest.approx(10.0 * 1e-4 * sizing.gross_exposure)
+    # Estimated cost covers all four legs: entry now plus exit estimated
+    # at current prices (2 x cost_bps x gross).
+    assert sizing.estimated_cost == pytest.approx(2.0 * 10.0 * 1e-4 * sizing.gross_exposure)
 
     assert len(sizing.legs) == 2
     for leg in sizing.legs:
@@ -97,3 +99,21 @@ def test_stress_estimate_uses_worst_losing_trade(actionable_pair):
     assert sizing.stress_loss_estimate == pytest.approx(
         abs(worst) * sizing.gross_exposure, rel=1e-9
     )
+
+
+def test_whole_share_tie_breaks_prefer_larger_gross():
+    # 4/2 and 6/3 shares have mathematically identical notional ratios;
+    # floating-point noise must not decide the winner — the tie-break
+    # prefers the larger gross exposure (use more of the allowed budget).
+    from app.quant.sizing import _whole_share_search
+
+    price_a, price_b = 254.93, 341.05
+    allowed_gross = 3053.0
+    target_a = allowed_gross / (1 + 0.699)
+    target_b = allowed_gross - target_a
+    pair = _whole_share_search(target_a, target_b, price_a, price_b, allowed_gross)
+    assert pair is not None
+    qty_a, qty_b = pair
+    gross = qty_a * price_a + qty_b * price_b
+    # (6, 3) gross ~= 2553 dominates (4, 2) gross ~= 1702 at the same ratio.
+    assert (qty_a, qty_b) == (6, 3), f"got {pair} (gross {gross:.2f})"

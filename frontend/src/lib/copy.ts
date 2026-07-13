@@ -104,10 +104,3 @@ export const EDUCATIONAL_DISCLAIMER =
   "examples only, not financial advice, and nothing here guarantees profit. " +
   "It never sends orders and never connects to a brokerage.";
 
-export const STANDING_WARNINGS: string[] = [
-  "Historical performance does not guarantee future results.",
-  "Correlation and price relationships can break without warning.",
-  "yfinance is an unofficial data source and can be delayed or incomplete.",
-  "Cost estimates exclude bid-ask spreads, borrow availability and fees, dividends on short positions, market impact, taxes and corporate events.",
-  "AI summaries can be incomplete or wrong and must be checked against their linked sources.",
-];

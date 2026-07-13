@@ -191,8 +191,9 @@ class RecordedNarrativeProvider:
     never live AI. The reply's content hash is verified when present.
     """
 
-    def __init__(self, path: Path):
+    def __init__(self, path: Path, *, reversed_order: bool = False):
         self._path = Path(path)
+        self._reversed = reversed_order
         try:
             payload = json.loads(self._path.read_text())
             self._metadata = payload["metadata"]
@@ -207,6 +208,15 @@ class RecordedNarrativeProvider:
                 f"Recorded narrative fixture '{self._path.name}' failed its "
                 "integrity check (content hash mismatch)."
             )
+        if self._reversed:
+            # The fixture was recorded for (B, A): summary_a/summary_b are
+            # positional, so they must be swapped to match the request order.
+            swapped = dict(self._reply)
+            swapped["summary_a"], swapped["summary_b"] = (
+                self._reply.get("summary_b"),
+                self._reply.get("summary_a"),
+            )
+            self._reply = swapped
 
     @classmethod
     def find(
@@ -215,11 +225,14 @@ class RecordedNarrativeProvider:
         """Return a provider when a recorded fixture exists for the pair."""
         directory = Path(fixtures_dir)
         a, b = ticker_a.strip().upper(), ticker_b.strip().upper()
-        for name in (f"narrative_{a}_{b}.json", f"narrative_{b}_{a}.json"):
+        for name, is_reversed in (
+            (f"narrative_{a}_{b}.json", False),
+            (f"narrative_{b}_{a}.json", True),
+        ):
             path = directory / name
             if path.exists():
                 try:
-                    return cls(path)
+                    return cls(path, reversed_order=is_reversed)
                 except NarrativeError as exc:
                     logger.warning("recorded narrative fixture rejected: %s", exc)
                     return None
