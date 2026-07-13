@@ -23,7 +23,7 @@ recorded DeepSeek replies for both demo pairs
 (`backend/fixtures/narrative_RCL_CCL.json` and
 `backend/fixtures/narrative_ALL_TRV.json`, model `deepseek-v4-flash`,
 captured 2026-07-13). Fixture mode replays them labelled **Recorded AI
-response — 13 Jul 2026, 15:26 UTC**, needing no network and no key.
+response, 13 Jul 2026, 15:26 UTC**, needing no network and no key.
 
 ---
 
@@ -93,15 +93,14 @@ Two pre-validated recorded pairs, one concise route.
    banner:
    > "We're demoing on a frozen snapshot of real market data so the result is
    > deterministic — the same provider interface runs live yfinance data."
-3. **The Watch verdict.** The banner reads **"Watch — gap not unusual
+3. **The Watch verdict.** The banner reads **"Watch: gap not unusual
    enough"** with the one-sentence explanation: *"RCL and CCL pass every
    check, but today's gap (z = +1.80) is below the 2.0 entry threshold, so
    the strategy waits."*
 4. **Read the "In plain English" strip aloud, word for word:**
-   > "*RCL and CCL usually travel together. Right now their gap is about
-   > 1.8× its normal drift — stretched, but not unusual enough to act on. The
-   > tool says watch, not trade: every check passed except today's gap being
-   > wide enough.*
+   > "*RCL and CCL usually travel together. Their gap is about 1.8x its
+   > normal drift: stretched, but not unusual enough to act on. Watch, not
+   > trade: every check passed except the width of today's gap.*
    >
    > Every result comes with that strip — the machine verdict retold in
    > sentences your grandmother could check."
@@ -119,7 +118,7 @@ Two pre-validated recorded pairs, one concise route.
    > 'n/a' instead of pretending."
 6. **A first taste of the AI.** Glance at the Narrative Lens card — it shows
    **"No obvious news explanation"**, a **Confidence: MEDIUM** chip and the
-   **Recorded AI response — 13 Jul 2026, 15:26 UTC** label:
+   **Recorded AI response, 13 Jul 2026, 15:26 UTC** label:
    > "A real DeepSeek reply, recorded and replayed for reliability. It read
    > the recent headlines and found a *shared* story — '*Both companies were
    > part of a larger cruise stock rebound fueled by sector-wide
@@ -135,7 +134,7 @@ Two pre-validated recorded pairs, one concise route.
 
 1. **Enter the pair.** Type `ALL` and `TRV` (Allstate and Travelers — two
    big US insurers, same hurricanes, same pricing cycles), still in Demo
-   mode. The banner reads **"Candidate setup — sell ALL, buy TRV"** with the
+   mode. The banner reads **"Candidate setup: sell ALL, buy TRV"** with the
    explanation: *"ALL looks unusually expensive relative to TRV (z = +2.67),
    so the strategy would sell ALL and buy TRV."*
    > "Same four questions — but this time the gap card *passes*: **2.7x the
@@ -171,7 +170,7 @@ Two pre-validated recorded pairs, one concise route.
    possible company-specific explanation for the gap, which may make
    reversion less likely."** — then **"Possible company-specific
    explanation"**, **Confidence: MEDIUM**, a **legal risk** flag and the
-   **Recorded AI response — 13 Jul 2026, 15:26 UTC** label:
+   **Recorded AI response, 13 Jul 2026, 15:26 UTC** label:
    > "The model tells us whether the gap is unusual; DeepSeek helps us
    > examine why. And here it *pushes back*: Travelers' headlines are
    > consistently positive — earnings-beat expectations, fair-value
@@ -255,8 +254,9 @@ their expandable sections — open them only if a judge asks.
 - **Automated tests** cover signals, timing, leakage, sizing, sign
   consistency and AI failure modes.
 - **Transparent rejection.** Unsuitable pairs fail loudly with the reason —
-  we can demo it live: KO/PEP is rejected because its fitted hedge ratio is
-  negative, and NVDA/KO because their correlation is −0.23, far below 0.60.
+  we can demo it live: NVDA/KO (Nvidia vs Coca-Cola, obviously unrelated) is
+  rejected because their correlation is −0.23, far below 0.60, and even
+  KO/PEP is refused because its fitted hedge ratio turned negative.
 - **Grounded AI output**: structured JSON, Pydantic-validated, every claim
   linked to supplied source IDs — and the demo replays *real* recorded
   DeepSeek replies, honestly labelled **Recorded AI response**, never passed
@@ -303,7 +303,7 @@ the past?"
 
 | Value | RCL/CCL (Beat 1) | ALL/TRV (Beat 2) |
 | --- | --- | --- |
-| Verdict | **Watch — gap not unusual enough** (`WAIT`) | **Candidate setup — sell ALL, buy TRV** (`SELL_A_BUY_B`) |
+| Verdict | **Watch: gap not unusual enough** (`WAIT`) | **Candidate setup: sell ALL, buy TRV** (`SELL_A_BUY_B`) |
 | Do they move together? | pass — **0.85 / 1.00** | pass — **0.66 / 1.00** |
 | Is the relationship steady? | pass — **balance ratio 1.23** (14% change, 55% leg, 44 crossings) | pass — **balance ratio 0.70** (7% change, 59% leg, 62 crossings) |
 | Is today's gap unusual? | **caution — 1.8x the usual drift** (z = +1.80) | pass — **2.7x the usual drift** (z = +2.67, as of 2026-07-13) |
@@ -319,8 +319,9 @@ the past?"
 | Balanced | SELL 6 ALL / BUY 3 TRV | ≈ $2,522 (est. fees ≈ $5.04) | ≈ $82 vs $100 |
 | Aggressive | SELL 13 ALL / BUY 7 TRV | ≈ $5,631 | ≈ $182 vs $200 |
 
-**Rejections:** KO/PEP — correlation 0.61 passes, **beta −0.19 →
-UNSUITABLE_PAIR**. NVDA/KO — **correlation −0.23 → UNSUITABLE_PAIR**.
+**Rejections:** NVDA/KO — **correlation −0.23 → UNSUITABLE_PAIR** (the
+unrelated-pair beat). KO/PEP — correlation 0.61 passes, **beta −0.19 →
+UNSUITABLE_PAIR** (the optional cola-wars surprise).
 
 **Directions:** z ≥ +2 → SELL A, BUY B (A expensive). z ≤ −2 → BUY A, SELL B
 (A cheap). Otherwise WAIT.
@@ -442,7 +443,7 @@ network failure changes almost nothing:
    DeepSeek replies for both demo pairs
    (`backend/fixtures/narrative_RCL_CCL.json`,
    `backend/fixtures/narrative_ALL_TRV.json`, model `deepseek-v4-flash`),
-   and Demo mode replays them labelled **Recorded AI response — 13 Jul
+   and Demo mode replays them labelled **Recorded AI response, 13 Jul
    2026, 15:26 UTC** — no network, no key. Only Live mode calls DeepSeek
    for real; offline it degrades gracefully to **AI context unavailable**
    with the quant analysis fully usable.
@@ -488,16 +489,17 @@ Run the full script against the clock at least twice. Tick everything:
       (pass/pass/caution/caution) and the recorded AI card ("No obvious news
       explanation", sector-wide rebound shared story) all render; the "In
       plain English" strip rehearsed read aloud.
-- [ ] ALL/TRV Demo-mode analysis pre-clicked once — verdict ("Candidate setup
-      — sell ALL, buy TRV"), four cards (pass/pass/pass/caution), "The gap
+- [ ] ALL/TRV Demo-mode analysis pre-clicked once — verdict ("Candidate setup:
+      sell ALL, buy TRV"), four cards (pass/pass/pass/caution), "The gap
       between them" chart, trade plan, and the recorded AI card with the
       **Elevated news risk** alert all render.
 - [ ] Risk-profile flip rehearsed: Conservative SELL 2 ALL / BUY 1 TRV,
       Balanced SELL 6 ALL / BUY 3 TRV, Aggressive SELL 13 ALL / BUY 7 TRV —
       and the "risk budget binds, not the cap" line ready.
-- [ ] KO/PEP rejection route rehearsed as the honest-failure answer (its
-      explanation sentence read aloud once); NVDA/KO as backup.
-- [ ] Both recorded AI cards verified to show **Recorded AI response — 13
+- [ ] NVDA/KO rejection route rehearsed as the unrelated-pair beat (its
+      explanation sentence read aloud once); KO/PEP kept as the optional
+      cola-wars surprise.
+- [ ] Both recorded AI cards verified to show **Recorded AI response, 13
       Jul 2026, 15:26 UTC** and the `deepseek-v4-flash` footer; if live mode
       will be shown at all, it was tested immediately beforehand.
 - [ ] The two cited claims to point at rehearsed: "Travelers expected to

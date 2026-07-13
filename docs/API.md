@@ -580,7 +580,7 @@ POST /api/analyse
   },
   "warnings": [
     "The historical screen passed with limited evidence (6 completed trades); treat the result with extra caution.",
-    "Recorded market snapshot — fixture data captured 2026-07-13",
+    "Recorded market snapshot: fixture data captured 2026-07-13",
     "Historical performance does not guarantee future results.",
     "…"
   ],
