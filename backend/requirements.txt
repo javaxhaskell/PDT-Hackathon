@@ -7,3 +7,4 @@ statsmodels>=0.14
 yfinance>=0.2.50
 openai>=1.40
 requests>=2.32
+python-dotenv>=1.0
