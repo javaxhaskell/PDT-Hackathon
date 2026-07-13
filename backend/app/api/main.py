@@ -8,7 +8,7 @@ a lazy import seam so this module never imports it at module load time.
 
 POST /api/analyse never waits for DeepSeek; the frontend calls
 POST /api/narrative independently. Every error path returns structured
-ApiError JSON — never a raw stack trace.
+ApiError JSON, never a raw stack trace.
 """
 
 from __future__ import annotations
@@ -168,7 +168,7 @@ def get_narrative_selector() -> Callable[[NarrativeRequest], NarrativeProvider |
 
 
 # ---------------------------------------------------------------------------
-# Error handlers — structured ApiError JSON, never raw stack traces
+# Error handlers: structured ApiError JSON, never raw stack traces
 # ---------------------------------------------------------------------------
 
 
@@ -264,7 +264,7 @@ def symbols_search(q: str = "") -> SymbolSearchResponse:
 
 def _fixture_banner(fixture_captured_at: str | None) -> str:
     captured = (fixture_captured_at or "")[:10] or "unknown date"
-    return f"Recorded market snapshot — fixture data captured {captured}"
+    return f"Recorded market snapshot: fixture data captured {captured}"
 
 
 def _finish(
@@ -324,7 +324,7 @@ def analyse(
     ticker_a = request.ticker_a.strip().upper()
     ticker_b = request.ticker_b.strip().upper()
 
-    # 1. Identical tickers (case-insensitive) — no data fetch needed.
+    # 1. Identical tickers (case-insensitive): no data fetch needed.
     if ticker_a == ticker_b:
         return _finish(
             request,
@@ -425,7 +425,7 @@ def analyse(
 
 
 # ---------------------------------------------------------------------------
-# POST /api/narrative — independent of /api/analyse
+# POST /api/narrative, independent of /api/analyse
 # ---------------------------------------------------------------------------
 
 

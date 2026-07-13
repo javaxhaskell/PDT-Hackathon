@@ -24,14 +24,16 @@ export default function ChartsSection({
   const stopZ = signal?.stop_z;
   return (
     <section aria-label="Charts" className="space-y-4">
-      <div className="rounded-xl border border-edge bg-surface p-5">
-        <h3 className="text-sm font-semibold text-ink">The gap between them</h3>
-        <p className="mt-1 text-xs text-muted">
+      <div className="rounded-none border border-edge bg-surface p-5">
+        <h3 className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
+          The gap between them
+        </h3>
+        <p className="mt-2 text-xs text-faint">
           Distance from the fitted relationship, its rolling mean
           {entryZ !== undefined && stopZ !== undefined
-            ? `, the entry bands at plus and minus ${entryZ} standard deviations and the stop bands at plus and minus ${stopZ}`
+            ? `, entry bands at plus and minus ${entryZ} standard deviations and stop bands at plus and minus ${stopZ}`
             : " and its entry and stop bands"}
-          . Dots mark historical trade entries and exits.
+          . Dots mark past trade entries and exits.
         </p>
         <div className="mt-3">
           <SpreadChartView
@@ -44,15 +46,15 @@ export default function ChartsSection({
         </div>
       </div>
 
-      <details className="group rounded-xl border border-edge bg-surface">
-        <summary className="cursor-pointer list-none p-5 text-sm font-semibold text-ink transition-colors hover:text-pos-text">
+      <details className="group rounded-none border border-edge bg-surface">
+        <summary className="cursor-pointer list-none p-5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted transition-colors hover:text-ink">
           <span aria-hidden className="mr-2 inline-block group-open:rotate-90">
             &#9656;
           </span>
-          Normalised prices — both stocks start at 100
+          Normalised prices: both stocks start at 100
         </summary>
         <div className="px-5 pb-5">
-          <p className="mb-3 text-xs text-muted">
+          <p className="mb-3 text-xs text-faint">
             Setting both stocks to 100 on the first common date makes different
             share prices comparable.
           </p>
@@ -64,20 +66,20 @@ export default function ChartsSection({
         </div>
       </details>
 
-      <details className="group rounded-xl border border-edge bg-surface">
-        <summary className="cursor-pointer list-none p-5 text-sm font-semibold text-ink transition-colors hover:text-pos-text">
+      <details className="group rounded-none border border-edge bg-surface">
+        <summary className="cursor-pointer list-none p-5 text-[11px] font-medium uppercase tracking-[0.14em] text-muted transition-colors hover:text-ink">
           <span aria-hidden className="mr-2 inline-block group-open:rotate-90">
             &#9656;
           </span>
           If you&apos;d followed the rule (after fees)
           {maxDrawdown !== null && maxDrawdown !== undefined && (
-            <span className="ml-3 rounded-full border border-edge bg-surface-deep px-2.5 py-0.5 font-mono text-xs font-semibold text-neg-text">
+            <span className="ml-3 rounded-[2px] border border-neg/60 px-2 py-0.5 font-mono text-xs tabular-nums tracking-normal text-neg">
               Max drawdown {fmtPct(maxDrawdown)}
             </span>
           )}
         </summary>
         <div className="px-5 pb-5">
-          <p className="mb-3 text-xs text-muted">
+          <p className="mb-3 text-xs text-faint">
             Growth of one unit of gross exposure through the evaluation period,
             after estimated costs on all four trade legs.
           </p>

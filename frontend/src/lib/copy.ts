@@ -1,5 +1,5 @@
 /**
- * Display copy for backend states. Pure mapping — the backend decides the
+ * Display copy for backend states. Pure mapping: the backend decides the
  * state; this file only turns machine-readable enums into words.
  */
 
@@ -19,11 +19,11 @@ export function verdictTitle(
 ): string {
   switch (state) {
     case "BUY_A_SELL_B":
-      return `Candidate setup — buy ${tickerA}, sell ${tickerB}`;
+      return `Candidate setup: buy ${tickerA}, sell ${tickerB}`;
     case "SELL_A_BUY_B":
-      return `Candidate setup — sell ${tickerA}, buy ${tickerB}`;
+      return `Candidate setup: sell ${tickerA}, buy ${tickerB}`;
     case "WAIT":
-      return "Watch — gap not unusual enough";
+      return "Watch: gap not unusual enough";
     case "HISTORICAL_SCREEN_FAILED":
       return "Historical screen failed";
     case "UNSUITABLE_PAIR":

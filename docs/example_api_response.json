@@ -211,8 +211,8 @@
      "Daily-return correlation: 0.66",
      "Pass threshold: at least 0.60"
     ],
-    "how_this_works": "We measure the Pearson correlation of the two stocks' daily percentage moves over the formation window (the first 60% of dates). Values near 1 mean they usually move in the same direction on the same day; this is only a first filter, never an edge.",
-    "plain_english": "The daily percentage moves of ALL and TRV lined up strongly."
+    "how_this_works": "Pearson correlation of daily percentage moves over the formation window (the first 60% of dates). Values near 1 mean they usually move together; a first filter, never an edge.",
+    "plain_english": "The daily moves of ALL and TRV lined up strongly."
    },
    {
     "key": "stable_relationship",
@@ -225,8 +225,8 @@
      "Largest leg weight: 59% of gross (limit 80%)",
      "Spread crossed its rolling average 62 times (minimum 6)"
     ],
-    "how_this_works": "Beta is the slope of the line of best fit between the two log prices: how much of B normally balances A. We check that it is positive, that it did not change dramatically while we were estimating it, that neither leg dominates the money, and that the spread genuinely oscillates around its average.",
-    "plain_english": "The line-of-best-fit relationship looks steady enough to use for a paper trade."
+    "how_this_works": "Beta is the slope of the fit between the two log prices: how much of B balances A. It must be positive and stable, neither leg may dominate, and the spread must oscillate around its average.",
+    "plain_english": "The fitted relationship looks steady enough to use for a paper trade."
    },
    {
     "key": "unusual_today",
@@ -238,7 +238,7 @@
      "Entry threshold: |z| >= 2.0 (caution from |z| >= 1.50)",
      "Spread 0.0695 vs rolling mean 0.0011 (std 0.0256)"
     ],
-    "how_this_works": "The z-score counts how many recent standard deviations today's spread sits from its previous 60-day average. It is a ruler for unusualness, not a prediction guarantee.",
+    "how_this_works": "The z-score counts how many standard deviations today's spread sits from its previous 60-day average: a ruler for unusualness, not a prediction.",
     "plain_english": "Today's gap is unusually wide: ALL looks expensive relative to TRV by about 2.7 recent standard deviations."
    },
    {
@@ -254,8 +254,8 @@
      "Total estimated costs: 1.22% of gross exposure",
      "Limited evidence: 5-9 trades is too few to call reliable."
     ],
-    "how_this_works": "We replay the identical fixed rule over the most recent 40% of dates, which were never used to fit the relationship. Signals form at a close, execute at the next open, and costs are charged on both legs at entry and exit. Passing this screen is a minimum requirement, not proof of future profit.",
-    "plain_english": "The unchanged rule cleared the minimum screen after costs, but with only 6 trades this is limited evidence, not statistical proof."
+    "how_this_works": "The identical fixed rule replays over the most recent 40% of dates, never used in fitting. Signals form at a close and execute at the next open, with costs on both legs at entry and exit. Passing is a minimum bar, not proof of future profit.",
+    "plain_english": "The rule cleared the screen after costs, but 6 trades is limited evidence, not proof."
    }
   ],
   "charts": {
@@ -16097,7 +16097,7 @@
   },
   "warnings": [
    "The historical screen passed with limited evidence (6 completed trades); treat the result with extra caution.",
-   "Recorded market snapshot \u2014 fixture data captured 2026-07-13",
+   "Recorded market snapshot: fixture data captured 2026-07-13",
    "Historical performance does not guarantee future results.",
    "Correlation and price relationships can break.",
    "yfinance is an unofficial data source and can be delayed or incomplete.",

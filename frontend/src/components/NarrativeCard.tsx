@@ -12,15 +12,17 @@ function Shell({ children }: { children: React.ReactNode }) {
   return (
     <section
       aria-label="AI Narrative Lens"
-      className="rounded-xl border border-seriesb/40 bg-gradient-to-br from-surface to-surface-deep p-5"
+      className="rounded-none border border-edge bg-surface p-5"
     >
       <header className="flex flex-wrap items-center gap-2">
-        <h3 className="text-sm font-semibold text-ink">AI Narrative Lens</h3>
-        <span className="rounded-full border border-seriesb/50 bg-seriesb/10 px-2.5 py-0.5 text-xs font-semibold text-seriesb">
+        <h3 className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
+          AI Narrative Lens
+        </h3>
+        <span className="rounded-[2px] border border-edge px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
           AI-generated
         </span>
       </header>
-      <div className="mt-4">{children}</div>
+      <div className="mt-4 border-t border-edge pt-4">{children}</div>
     </section>
   );
 }
@@ -32,12 +34,12 @@ function SourceLink({ item }: { item: NewsItem }) {
       href={item.url}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-pos-text underline decoration-pos/50 underline-offset-2 transition-colors hover:text-pos-bright"
+      className="text-ink underline decoration-edge underline-offset-2 transition-colors hover:decoration-muted"
     >
       {label}
     </a>
   ) : (
-    <span className="text-ink/90">{label}</span>
+    <span className="text-ink">{label}</span>
   );
 }
 
@@ -49,9 +51,9 @@ export default function NarrativeCard({
   if (state.status === "off") {
     return (
       <Shell>
-        <p className="text-sm text-muted">
-          Narrative Lens is switched off. Turn it on and re-analyse to check
-          whether recent headlines might explain the gap.
+        <p className="text-[13px] text-muted">
+          Narrative Lens is off. Turn it on and re-analyse for headline
+          context.
         </p>
       </Shell>
     );
@@ -61,9 +63,9 @@ export default function NarrativeCard({
     return (
       <Shell>
         <div aria-live="polite" className="space-y-3">
-          <p className="text-sm text-muted">Reading recent headlines…</p>
-          <div className="h-3 w-2/3 animate-pulse rounded bg-edge" />
-          <div className="h-3 w-1/2 animate-pulse rounded bg-edge" />
+          <p className="text-[13px] text-muted">Reading recent headlines</p>
+          <div className="h-3 w-2/3 animate-pulse rounded-none bg-white/5" />
+          <div className="h-3 w-1/2 animate-pulse rounded-none bg-white/5" />
         </div>
       </Shell>
     );
@@ -72,10 +74,12 @@ export default function NarrativeCard({
   if (state.status === "error") {
     return (
       <Shell>
-        <p className="text-sm font-semibold text-ink">AI context unavailable</p>
-        <p className="mt-1 text-sm text-muted">
+        <p className="text-[13px] font-medium text-ink">
+          AI context unavailable
+        </p>
+        <p className="mt-1 text-[13px] text-muted">
           The Narrative Lens could not be reached. The quant analysis above is
-          unaffected — it never depends on the AI.
+          unaffected.
         </p>
       </Shell>
     );
@@ -86,12 +90,14 @@ export default function NarrativeCard({
   if (data.ai_status === "unavailable" || data.ai_status === "not_configured") {
     return (
       <Shell>
-        <p className="text-sm font-semibold text-ink">AI context unavailable</p>
-        <p className="mt-1 text-sm text-muted">
+        <p className="text-[13px] font-medium text-ink">
+          AI context unavailable
+        </p>
+        <p className="mt-1 text-[13px] text-muted">
           {data.ai_status === "not_configured"
             ? "No DeepSeek API key is configured on the server."
             : "The AI service did not return a usable answer."}{" "}
-          The quant analysis above is unaffected — it never depends on the AI.
+          The quant analysis above is unaffected.
         </p>
       </Shell>
     );
@@ -103,12 +109,12 @@ export default function NarrativeCard({
   ) {
     return (
       <Shell>
-        <p className="text-sm font-semibold text-ink">
+        <p className="text-[13px] font-medium text-ink">
           Insufficient recent news
         </p>
-        <p className="mt-1 text-sm text-muted">
-          At least one company had fewer than two usable headlines from the
-          last 30 days, so no news classification was attempted.
+        <p className="mt-1 text-[13px] text-muted">
+          At least one company had fewer than two usable headlines in the last
+          30 days; no classification was attempted.
         </p>
       </Shell>
     );
@@ -123,78 +129,77 @@ export default function NarrativeCard({
         {data.elevated_news_risk && (
           <p
             role="alert"
-            className="rounded-lg border border-neg/60 bg-neg/15 px-3 py-2 text-sm font-bold text-neg-text"
+            className="rounded-none border border-neg/60 px-3 py-2 text-[13px] font-medium text-neg"
           >
-            Elevated news risk — recent headlines offer a possible
-            company-specific explanation for the gap, which may make reversion
-            less likely.
+            Elevated news risk: headlines offer a possible company-specific
+            explanation, which may make reversion less likely.
           </p>
         )}
 
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-lg font-bold text-ink">
+          <p className="text-lg font-semibold text-ink">
             {classificationLabel(data.classification)}
           </p>
           {data.confidence && (
-            <span className="rounded-full border border-edge bg-surface-deep px-2.5 py-0.5 text-xs font-semibold text-muted">
+            <span className="rounded-[2px] border border-edge px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
               Confidence: {data.confidence}
             </span>
           )}
           {data.ai_status === "recorded" && (
-            <span className="rounded-full border border-warn/50 bg-warn/15 px-2.5 py-0.5 text-xs font-semibold text-warn-text">
+            <span className="rounded-[2px] border border-warn/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-warn">
               {aiStatusLabel("recorded")}
-              {data.recorded_at ? ` — ${fmtTimestamp(data.recorded_at)}` : ""}
+              {data.recorded_at ? `, ${fmtTimestamp(data.recorded_at)}` : ""}
             </span>
           )}
         </div>
-        <p className="text-xs text-muted">
-          Confidence is the model self-assessment of its reading of the
-          headlines. It is not a probability of profit.
+        <p className="text-xs text-faint">
+          Confidence is the model&apos;s self-assessment of its reading, not a
+          probability of profit.
         </p>
 
         {data.explanation && (
-          <p className="text-sm leading-relaxed text-ink/90">
+          <p className="text-[13px] leading-relaxed text-ink">
             {data.explanation}
           </p>
         )}
 
-        <dl className="grid gap-2 text-sm sm:grid-cols-2">
+        <dl className="grid gap-3 text-[13px] sm:grid-cols-2">
           {data.summary_a && (
-            <div className="rounded-lg bg-surface-deep p-3">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+            <div className="rounded-none border border-edge bg-surface-deep p-3">
+              <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
                 Company A news
               </dt>
-              <dd className="mt-1 text-ink/90">{data.summary_a}</dd>
+              <dd className="mt-1 text-muted">{data.summary_a}</dd>
             </div>
           )}
           {data.summary_b && (
-            <div className="rounded-lg bg-surface-deep p-3">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+            <div className="rounded-none border border-edge bg-surface-deep p-3">
+              <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
                 Company B news
               </dt>
-              <dd className="mt-1 text-ink/90">{data.summary_b}</dd>
+              <dd className="mt-1 text-muted">{data.summary_b}</dd>
             </div>
           )}
           {data.shared_story && (
-            <div className="rounded-lg bg-surface-deep p-3 sm:col-span-2">
-              <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+            <div className="rounded-none border border-edge bg-surface-deep p-3 sm:col-span-2">
+              <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
                 Shared story
               </dt>
-              <dd className="mt-1 text-ink/90">{data.shared_story}</dd>
+              <dd className="mt-1 text-muted">{data.shared_story}</dd>
             </div>
           )}
         </dl>
 
         {data.risk_flags.length > 0 && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
               Risk flags
             </p>
             <ul className="mt-1.5 flex flex-wrap gap-1.5">
               {data.risk_flags.map((flag) => (
                 <li
                   key={flag}
-                  className="rounded-full border border-warn/40 bg-warn/10 px-2.5 py-0.5 text-xs text-warn-text"
+                  className="rounded-[2px] border border-warn/60 px-2 py-0.5 text-xs text-warn"
                 >
                   {flag}
                 </li>
@@ -205,16 +210,16 @@ export default function NarrativeCard({
 
         {data.evidence.length > 0 && (
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+            <p className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
               Evidence and cited headlines
             </p>
             <ul className="mt-2 space-y-3">
               {data.evidence.map((claim) => (
                 <li
                   key={claim.claim}
-                  className="rounded-lg border border-edge bg-surface-deep p-3"
+                  className="rounded-none border border-edge bg-surface-deep p-3"
                 >
-                  <p className="text-sm text-ink/90">{claim.claim}</p>
+                  <p className="text-[13px] text-ink">{claim.claim}</p>
                   <ul className="mt-2 space-y-1 text-xs">
                     {citedItems(claim.source_ids).map((item) => (
                       <li key={item.source_id}>
@@ -230,7 +235,7 @@ export default function NarrativeCard({
 
         {data.news_items.length > 0 && (
           <details className="text-xs text-muted">
-            <summary className="cursor-pointer font-semibold">
+            <summary className="cursor-pointer font-medium">
               All headlines supplied to the model ({data.news_items.length})
             </summary>
             <ul className="mt-2 space-y-1">
@@ -243,7 +248,7 @@ export default function NarrativeCard({
           </details>
         )}
 
-        <p className="text-xs text-muted">
+        <p className="border-t border-edge pt-3 text-xs text-faint">
           {data.model ? `Model: ${data.model}. ` : ""}The AI reads only the
           supplied headlines and never changes the trade direction, backtest or
           share quantities.

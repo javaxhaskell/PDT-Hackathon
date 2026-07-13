@@ -2,7 +2,7 @@ import type { AnalyseResponse } from "@/lib/types";
 
 /**
  * A plain-English retelling of the result for a non-finance audience.
- * Assembled ONLY from values the backend returned — no quant logic here.
+ * Assembled ONLY from values the backend returned; no quant logic here.
  */
 export default function StoryStrip({ result }: { result: AnalyseResponse }) {
   const a = result.request.ticker_a;
@@ -20,16 +20,16 @@ export default function StoryStrip({ result }: { result: AnalyseResponse }) {
       sentences.push(`${a} and ${b} usually travel together.`);
       if (z !== undefined) {
         sentences.push(
-          `Right now ${rich} looks unusually expensive next to ${cheap} — the gap is about ${Math.abs(z).toFixed(1)}× its normal drift.`,
+          `${rich} now looks unusually expensive next to ${cheap}: the gap is about ${Math.abs(z).toFixed(1)}x its normal drift.`,
         );
       }
       if (bt) {
         sentences.push(
-          `In the recent past, betting that this gap closes made ${(bt.net_profit * 100).toFixed(1)}% after estimated fees across ${bt.n_trades} trades${bt.limited_evidence ? " (a small sample — treat with caution)" : ""}.`,
+          `Betting on this gap closing made ${(bt.net_profit * 100).toFixed(1)}% after estimated fees across ${bt.n_trades} trades${bt.limited_evidence ? " (a small sample, treat with caution)" : ""}.`,
         );
       }
       sentences.push(
-        `So the paper trade: sell ${rich}, buy ${cheap}, and wait for the gap to close.`,
+        `The paper trade: sell ${rich}, buy ${cheap}, wait for the gap to close.`,
       );
       break;
     }
@@ -37,24 +37,24 @@ export default function StoryStrip({ result }: { result: AnalyseResponse }) {
       sentences.push(`${a} and ${b} usually travel together.`);
       if (z !== undefined) {
         sentences.push(
-          `Right now their gap is about ${Math.abs(z).toFixed(1)}× its normal drift — stretched, but not unusual enough to act on.`,
+          `Their gap is about ${Math.abs(z).toFixed(1)}x its normal drift: stretched, but not unusual enough to act on.`,
         );
       }
       sentences.push(
-        "The tool says watch, not trade: every check passed except today's gap being wide enough.",
+        "Watch, not trade: every check passed except the width of today's gap.",
       );
       break;
     }
     case "HISTORICAL_SCREEN_FAILED": {
       sentences.push(
-        `${a} and ${b} move together, but replaying the same fixed rule on past data did not make money after fees.`,
+        `${a} and ${b} move together, but the fixed rule did not make money on past data after fees.`,
       );
-      sentences.push("No trade is suggested — the history has to earn it first.");
+      sentences.push("No trade suggested: the history has to earn it first.");
       break;
     }
     case "UNSUITABLE_PAIR": {
       sentences.push(
-        `${a} and ${b} do not behave like a reliable pair, so the tool stops here rather than force a trade.`,
+        `${a} and ${b} do not behave like a reliable pair, so the tool stops here.`,
       );
       break;
     }
@@ -65,12 +65,12 @@ export default function StoryStrip({ result }: { result: AnalyseResponse }) {
   return (
     <section
       aria-label="Plain-English summary"
-      className="rounded-xl border border-edge bg-surface-deep px-5 py-4"
+      className="rounded-none border border-edge bg-surface px-5 py-4"
     >
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-muted">
+      <h3 className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
         In plain English
       </h3>
-      <p className="mt-2 text-sm leading-relaxed text-ink">
+      <p className="mt-2 text-[13px] leading-relaxed text-muted">
         {sentences.join(" ")}
       </p>
     </section>

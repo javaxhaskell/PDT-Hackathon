@@ -112,17 +112,21 @@ export default function NormalisedPricesView({
           <Tooltip content={renderTooltip} />
           <Legend
             formatter={(value) => (
-              <span style={{ color: CHART_COLORS.tick, fontSize: 12 }}>
+              <span style={{ color: CHART_COLORS.legend, fontSize: 11 }}>
                 {value}
               </span>
             )}
           />
-          <ReferenceLine y={100} stroke={CHART_COLORS.grid} />
+          <ReferenceLine
+            y={100}
+            stroke={CHART_COLORS.reference}
+            strokeDasharray="4 4"
+          />
           <Line
             dataKey="a"
             name={tickerA}
             stroke={CHART_COLORS.seriesA}
-            strokeWidth={2}
+            strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
           />
@@ -130,7 +134,7 @@ export default function NormalisedPricesView({
             dataKey="b"
             name={tickerB}
             stroke={CHART_COLORS.seriesB}
-            strokeWidth={2}
+            strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
           />

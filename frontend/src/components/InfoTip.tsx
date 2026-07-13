@@ -20,7 +20,7 @@ export default function InfoTip({ text }: { text: string }) {
           if (e.key === "Escape") setOpen(false);
         }}
         onBlur={() => setOpen(false)}
-        className="rounded-full border border-edge px-2 py-0.5 text-xs text-muted transition-colors hover:border-muted hover:text-ink focus:outline-none focus:ring-2 focus:ring-pos-bright"
+        className="text-[11px] text-faint underline decoration-edge underline-offset-4 transition-colors hover:text-ink hover:decoration-muted focus:text-ink focus:outline-none focus-visible:border-b focus-visible:border-ink"
       >
         How this works
       </button>
@@ -28,7 +28,7 @@ export default function InfoTip({ text }: { text: string }) {
         <span
           role="note"
           id={id}
-          className="absolute right-0 top-full z-20 mt-2 block w-64 rounded-lg border border-edge bg-surface-deep p-3 text-xs leading-relaxed text-ink shadow-xl"
+          className="absolute right-0 top-full z-20 mt-2 block w-64 rounded-none border border-edge bg-surface-deep p-3 text-xs leading-relaxed text-muted"
         >
           {text}
         </span>

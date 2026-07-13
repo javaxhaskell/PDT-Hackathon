@@ -1,4 +1,4 @@
-"""PairScope quant engine — the single entry point for one pair analysis.
+"""PairScope quant engine: the single entry point for one pair analysis.
 
 Pipeline (see docs/MODEL.md for the full plain-English write-up):
 

@@ -4,26 +4,27 @@
 
 /*
  * PairScope design tokens (spec section 13).
- * Dark navy financial-research look. Chart series colours were validated
- * for CVD separation and >=3:1 contrast against --surface-deep.
+ * Monochrome-first dark theme: near-black wells, hairline borders, and
+ * semantic colour only where meaning requires it (buy / sell / caution).
  */
 :root {
-  --background: #0b1120; /* deep navy page background */
-  --surface: #121b30; /* card surface */
-  --surface-deep: #0e1626; /* chart / inset surface */
-  --border: #24314b;
-  --foreground: #e8edf6; /* off-white text */
-  --muted: #96a3ba;
+  --background: #0a0c10; /* page background */
+  --surface: #10141b; /* card surface */
+  --surface-deep: #0d1016; /* chart / inset surface */
+  --border: rgba(255, 255, 255, 0.09); /* hairline */
+  --foreground: #e8eaed; /* primary text */
+  --muted: #98a0a8; /* secondary text */
+  --faint: #656c74; /* tertiary text / axis ticks */
 
-  --teal: #0fa393; /* positive / buy (marks) */
-  --teal-bright: #2dd4bf;
-  --teal-text: #5eead4; /* positive text on dark */
-  --coral: #e66767; /* negative / sell / risk (marks) */
-  --coral-text: #fda4a4;
-  --amber: #c98500; /* caution (marks) */
-  --amber-text: #fcd34d;
-  --violet: #9085e9; /* second identity series (ticker B) */
-  --grid: #1e2942;
+  --teal: #2fb5a3; /* buy / positive / pass */
+  --teal-bright: #2fb5a3;
+  --teal-text: #2fb5a3;
+  --coral: #d95f52; /* sell / negative / fail */
+  --coral-text: #d95f52;
+  --amber: #c29234; /* caution / warnings */
+  --amber-text: #c29234;
+  --violet: #98a0a8; /* second identity series (ticker B): muted grey */
+  --grid: rgba(255, 255, 255, 0.05);
 }
 
 html {

@@ -115,22 +115,20 @@ export default function Home() {
 
   return (
     <div className="mx-auto min-h-screen max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-8">
+      <header className="mb-8 border-b border-edge pb-6">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h1 className="text-2xl font-bold tracking-tight text-ink">
-            Pair<span className="text-pos-text">Scope</span>
+          <h1 className="text-2xl font-semibold tracking-tight text-ink">
+            PairScope
           </h1>
-          <span className="rounded-full border border-edge px-2.5 py-0.5 text-xs font-semibold text-muted">
-            Educational research tool — not financial advice
+          <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
+            Educational research tool. Not financial advice.
           </span>
         </div>
-        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+        <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-muted">
           Two stocks that usually move together sometimes drift apart.
-          PairScope checks whether today&apos;s gap is genuinely unusual,
-          whether betting on it closing actually worked in the past (after
-          fees), and sizes a pretend trade to your budget. An AI reads recent
-          headlines for context. The numbers say whether the gap is unusual;
-          the AI helps investigate why.
+          PairScope checks whether today&apos;s gap is unusual, whether trading
+          it worked in the past after fees, and sizes a paper trade to your
+          budget; an AI reads recent headlines for context.
         </p>
       </header>
 
@@ -146,12 +144,12 @@ export default function Home() {
       {errorMsg && (
         <div
           role="alert"
-          className="mt-6 rounded-xl border border-neg/60 bg-neg/10 p-5"
+          className="mt-6 rounded-none border border-neg/60 bg-surface p-5"
         >
-          <p className="text-sm font-semibold text-neg-text">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-neg">
             Analysis failed
           </p>
-          <p className="mt-1 text-sm text-muted">{errorMsg}</p>
+          <p className="mt-2 text-[13px] text-muted">{errorMsg}</p>
         </div>
       )}
 
@@ -160,13 +158,13 @@ export default function Home() {
           {result.data?.is_fixture && (
             <p
               role="status"
-              className="rounded-xl border-2 border-warn/70 bg-warn/15 px-4 py-3 text-sm font-bold text-warn-text"
+              className="rounded-none border border-warn/60 bg-surface-deep px-4 py-3 text-[13px] font-medium text-warn"
             >
               Recorded market snapshot
               {result.data.fixture_captured_at
-                ? ` — captured ${fmtTimestamp(result.data.fixture_captured_at)}`
+                ? `. Captured ${fmtTimestamp(result.data.fixture_captured_at)}`
                 : ""}
-              . This is demo data, not live prices.
+              . Demo data, not live prices.
             </p>
           )}
 
@@ -180,7 +178,7 @@ export default function Home() {
           <StoryStrip result={result} />
 
           {result.data && (
-            <p className="text-xs text-muted">
+            <p className="font-mono text-[11px] text-faint">
               Data: {result.data.provider} · retrieved{" "}
               {fmtTimestamp(result.data.retrieved_at)} · last market date{" "}
               {fmtDate(result.data.last_market_date)} · {result.data.currency}{" "}
@@ -220,9 +218,9 @@ export default function Home() {
       {!result && !errorMsg && (
         <div className="mt-6 space-y-6">
           <HowItWorks />
-          <div className="rounded-xl border border-dashed border-edge p-8 text-center text-sm text-muted">
-            Enter two tickers and press Analyse — or switch to Demo and try
-            RCL vs CCL, the cruise-line rivals.
+          <div className="rounded-none border border-edge p-8 text-center text-[13px] text-muted">
+            Enter two tickers and press Analyse, or switch to Demo and try RCL
+            vs CCL.
           </div>
           <WarningsFooter warnings={[]} />
         </div>

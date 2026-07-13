@@ -109,7 +109,7 @@ describe("PairScope happy path", () => {
     // --- verdict: SELL_A_BUY_B maps to "sell KO, buy PEP" -------------------
     expect(
       await screen.findByRole("heading", {
-        name: /candidate setup — sell ALL, buy TRV/i,
+        name: /candidate setup: sell ALL, buy TRV/i,
       }),
     ).toBeInTheDocument();
     expect(analyseBodies).toHaveLength(1);

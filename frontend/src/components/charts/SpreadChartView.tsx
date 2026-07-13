@@ -86,10 +86,10 @@ function MarkerDot(props: unknown) {
     <circle
       cx={cx}
       cy={cy}
-      r={5}
+      r={4}
       fill={fill}
       stroke={CHART_COLORS.surface}
-      strokeWidth={2}
+      strokeWidth={1}
     />
   );
 }
@@ -135,7 +135,7 @@ export default function SpreadChartView({
       }));
     const marker = rowData?.markerInfo;
     const extra = marker
-      ? `${marker.kind === "entry" ? "Trade entry" : "Trade exit"} — ${directionCopy(marker.direction, tickerA, tickerB)} (z = ${fmtSigned(marker.z)})`
+      ? `${marker.kind === "entry" ? "Trade entry" : "Trade exit"}: ${directionCopy(marker.direction, tickerA, tickerB)} (z = ${fmtSigned(marker.z)})`
       : undefined;
     return (
       <ChartTooltip
@@ -177,7 +177,7 @@ export default function SpreadChartView({
           <Tooltip content={renderTooltip} />
           <Legend
             formatter={(value) => (
-              <span style={{ color: CHART_COLORS.tick, fontSize: 12 }}>
+              <span style={{ color: CHART_COLORS.legend, fontSize: 11 }}>
                 {value}
               </span>
             )}
@@ -186,6 +186,8 @@ export default function SpreadChartView({
             dataKey="upperStop"
             name={`Stop band (+${stopLabel} sd)`}
             stroke={CHART_COLORS.stopBand}
+            strokeOpacity={0.5}
+            strokeWidth={1}
             strokeDasharray="2 4"
             dot={false}
             isAnimationActive={false}
@@ -194,6 +196,8 @@ export default function SpreadChartView({
             dataKey="lowerStop"
             name={`Stop band (-${stopLabel} sd)`}
             stroke={CHART_COLORS.stopBand}
+            strokeOpacity={0.5}
+            strokeWidth={1}
             strokeDasharray="2 4"
             dot={false}
             legendType="none"
@@ -203,6 +207,8 @@ export default function SpreadChartView({
             dataKey="upperEntry"
             name={`Entry band (+${entryLabel} sd)`}
             stroke={CHART_COLORS.entryBand}
+            strokeOpacity={0.6}
+            strokeWidth={1}
             strokeDasharray="6 4"
             dot={false}
             isAnimationActive={false}
@@ -211,6 +217,8 @@ export default function SpreadChartView({
             dataKey="lowerEntry"
             name={`Entry band (-${entryLabel} sd)`}
             stroke={CHART_COLORS.entryBand}
+            strokeOpacity={0.6}
+            strokeWidth={1}
             strokeDasharray="6 4"
             dot={false}
             legendType="none"
@@ -220,6 +228,7 @@ export default function SpreadChartView({
             dataKey="mean"
             name="Rolling mean"
             stroke={CHART_COLORS.mean}
+            strokeWidth={1}
             strokeDasharray="4 4"
             dot={false}
             isAnimationActive={false}
@@ -228,34 +237,34 @@ export default function SpreadChartView({
             dataKey="spread"
             name="Spread"
             stroke={CHART_COLORS.seriesA}
-            strokeWidth={2}
+            strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
           />
           <Scatter
             dataKey="entryMarker"
             name="Trade entry"
-            fill={CHART_COLORS.stopBand}
+            fill={CHART_COLORS.markerEntry}
             shape={<MarkerDot />}
             isAnimationActive={false}
           />
           <Scatter
             dataKey="exitMarker"
             name="Trade exit"
-            fill={CHART_COLORS.seriesA}
+            fill={CHART_COLORS.markerExit}
             shape={<MarkerDot />}
             isAnimationActive={false}
           />
           {boundary && (
             <ReferenceLine
               x={boundary}
-              stroke={CHART_COLORS.mean}
+              stroke={CHART_COLORS.reference}
               strokeDasharray="4 2"
               label={{
                 value: "fit ends / test begins",
                 position: "insideTopLeft",
                 fill: CHART_COLORS.tick,
-                fontSize: 11,
+                fontSize: 10,
               }}
             />
           )}

@@ -64,9 +64,10 @@ function useSymbolSearch(query: string): SymbolSearchResult[] {
   return results;
 }
 
-const labelClass = "block text-xs font-semibold uppercase tracking-wide text-muted";
+const labelClass =
+  "block text-[10px] font-medium uppercase tracking-[0.14em] text-muted";
 const inputClass =
-  "mt-1.5 w-full rounded-lg border border-edge bg-surface-deep px-3 py-2 text-sm text-ink placeholder:text-muted/60 focus:border-pos focus:outline-none focus:ring-1 focus:ring-pos";
+  "mt-1.5 w-full rounded-none border border-edge bg-surface-deep px-3 py-2 text-[13px] text-ink placeholder:text-faint focus:border-ink focus:outline-none";
 
 function TickerField({
   id,
@@ -131,7 +132,7 @@ export default function AnalyseForm({
         e.preventDefault();
         onSubmit();
       }}
-      className="rounded-2xl border border-edge bg-surface p-5 sm:p-6"
+      className="rounded-none border border-edge bg-surface p-5 sm:p-6"
     >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <TickerField
@@ -211,14 +212,14 @@ export default function AnalyseForm({
         </div>
         <fieldset>
           <legend className={labelClass}>Share mode</legend>
-          <div className="mt-1.5 flex gap-4 rounded-lg border border-edge bg-surface-deep px-3 py-2 text-sm">
+          <div className="mt-1.5 flex gap-4 rounded-none border border-edge bg-surface-deep px-3 py-2 text-[13px]">
             <label className="flex items-center gap-1.5 text-ink">
               <input
                 type="radio"
                 name="share-mode"
                 checked={values.wholeShares}
                 onChange={() => onPatch({ wholeShares: true })}
-                className="accent-[var(--teal)]"
+                className="accent-[var(--foreground)]"
               />
               Whole
             </label>
@@ -228,7 +229,7 @@ export default function AnalyseForm({
                 name="share-mode"
                 checked={!values.wholeShares}
                 onChange={() => onPatch({ wholeShares: false })}
-                className="accent-[var(--teal)]"
+                className="accent-[var(--foreground)]"
               />
               Fractional
             </label>
@@ -236,14 +237,14 @@ export default function AnalyseForm({
         </fieldset>
         <fieldset>
           <legend className={labelClass}>Data source</legend>
-          <div className="mt-1.5 flex gap-4 rounded-lg border border-edge bg-surface-deep px-3 py-2 text-sm">
+          <div className="mt-1.5 flex gap-4 rounded-none border border-edge bg-surface-deep px-3 py-2 text-[13px]">
             <label className="flex items-center gap-1.5 text-ink">
               <input
                 type="radio"
                 name="data-mode"
                 checked={values.dataMode === "live"}
                 onChange={() => onPatch({ dataMode: "live" })}
-                className="accent-[var(--teal)]"
+                className="accent-[var(--foreground)]"
               />
               Live
             </label>
@@ -253,41 +254,35 @@ export default function AnalyseForm({
                 name="data-mode"
                 checked={values.dataMode === "fixture"}
                 onChange={() => onPatch({ dataMode: "fixture" })}
-                className="accent-[var(--teal)]"
+                className="accent-[var(--foreground)]"
               />
               Demo
             </label>
           </div>
-          <p className="mt-1 text-xs text-muted">
-            Live fetches fresh yfinance prices; Demo replays a recorded market
-            snapshot for a reliable offline run. Demo pairs to try: RCL/CCL
-            (cruise rivals), ALL/TRV (insurers), KO/PEP (cola wars).
+          <p className="mt-1.5 text-xs text-faint">
+            Live fetches yfinance prices; Demo replays a recorded snapshot.
+            Try RCL/CCL (passes, watch), ALL/TRV (trade signal), NVDA/KO
+            (unrelated, rejected).
           </p>
         </fieldset>
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
-        <label className="flex items-center gap-2 text-sm text-ink">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-edge pt-5">
+        <label className="flex items-center gap-2 text-[13px] text-ink">
           <input
             type="checkbox"
             checked={values.narrativeOn}
             onChange={(e) => onPatch({ narrativeOn: e.target.checked })}
-            className="h-4 w-4 accent-[var(--teal)]"
+            className="h-4 w-4 accent-[var(--foreground)]"
           />
           Narrative Lens (AI news context)
         </label>
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex items-center gap-2 rounded-lg bg-pos px-6 py-2.5 text-sm font-bold text-background transition-colors hover:bg-pos-bright disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-none bg-ink px-10 py-3 text-xs font-semibold uppercase tracking-[0.14em] text-background transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
         >
-          {loading && (
-            <span
-              aria-hidden
-              className="h-4 w-4 animate-spin rounded-full border-2 border-background/40 border-t-background"
-            />
-          )}
-          {loading ? "Analysing…" : "Analyse"}
+          {loading ? "Analysing" : "Analyse"}
         </button>
       </div>
     </form>

@@ -6,9 +6,9 @@ export default function WarningsFooter({ warnings }: { warnings: string[] }) {
   return (
     <footer
       aria-label="Warnings and assumptions"
-      className="rounded-xl border border-edge bg-surface-deep p-5"
+      className="rounded-none border border-edge bg-surface p-5"
     >
-      <h3 className="text-xs font-semibold uppercase tracking-widest text-muted">
+      <h3 className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
         Warnings and assumptions
       </h3>
       <ul className="mt-3 list-disc space-y-1 pl-5 text-xs leading-relaxed text-muted">
@@ -16,7 +16,7 @@ export default function WarningsFooter({ warnings }: { warnings: string[] }) {
           <li key={w}>{w}</li>
         ))}
       </ul>
-      <p className="mt-4 border-t border-edge pt-3 text-xs font-semibold leading-relaxed text-warn-text">
+      <p className="mt-4 border-t border-edge pt-3 text-xs leading-relaxed text-warn">
         {EDUCATIONAL_DISCLAIMER}
       </p>
     </footer>

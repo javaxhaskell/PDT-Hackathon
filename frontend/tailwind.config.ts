@@ -26,6 +26,7 @@ const config: Config = {
         edge: "var(--border)",
         ink: "var(--foreground)",
         muted: "var(--muted)",
+        faint: "var(--faint)",
         pos: {
           DEFAULT: "var(--teal)",
           bright: "var(--teal-bright)",

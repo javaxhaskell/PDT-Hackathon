@@ -77,12 +77,16 @@ export default function EquityView({ chart }: { chart: EquityChart }) {
             tickFormatter={(v: number) => v.toFixed(2)}
           />
           <Tooltip content={renderTooltip} />
-          <ReferenceLine y={1} stroke={CHART_COLORS.grid} />
+          <ReferenceLine
+            y={1}
+            stroke={CHART_COLORS.reference}
+            strokeDasharray="4 4"
+          />
           <Line
             dataKey="equity"
             name="Equity (after costs)"
             stroke={CHART_COLORS.seriesA}
-            strokeWidth={2}
+            strokeWidth={1.5}
             dot={false}
             isAnimationActive={false}
           />

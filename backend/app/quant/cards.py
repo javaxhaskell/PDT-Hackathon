@@ -56,10 +56,10 @@ def _move_together_card(
 ) -> EvidenceCard:
     status = CardStatus.PASS if suitability.corr_ok else CardStatus.FAIL
     plain = (
-        f"The daily percentage moves of {ticker_a} and {ticker_b} lined up strongly."
+        f"The daily moves of {ticker_a} and {ticker_b} lined up strongly."
         if suitability.corr_ok
-        else f"The daily percentage moves of {ticker_a} and {ticker_b} did not line up "
-        "strongly enough to treat them as a pair."
+        else f"The daily moves of {ticker_a} and {ticker_b} did not line up strongly "
+        "enough to treat them as a pair."
     )
     return EvidenceCard(
         key="move_together",
@@ -71,10 +71,9 @@ def _move_together_card(
             f"Pass threshold: at least {config.MIN_CORRELATION:.2f}",
         ],
         how_this_works=(
-            "We measure the Pearson correlation of the two stocks' daily percentage "
-            "moves over the formation window (the first 60% of dates). Values near 1 "
-            "mean they usually move in the same direction on the same day; this is "
-            "only a first filter, never an edge."
+            "Pearson correlation of daily percentage moves over the formation window "
+            "(the first 60% of dates). Values near 1 mean they usually move together; "
+            "a first filter, never an edge."
         ),
         plain_english=plain,
     )
@@ -97,9 +96,9 @@ def _stable_relationship_card(
     status = CardStatus.PASS if ok else CardStatus.FAIL
     max_leg = max(leg_weight_a, leg_weight_b)
     plain = (
-        "The line-of-best-fit relationship looks steady enough to use for a paper trade."
+        "The fitted relationship looks steady enough to use for a paper trade."
         if ok
-        else "The line-of-best-fit relationship is not steady enough to rely on."
+        else "The fitted relationship is not steady enough to rely on."
     )
     return EvidenceCard(
         key="stable_relationship",
@@ -119,10 +118,9 @@ def _stable_relationship_card(
             ),
         ],
         how_this_works=(
-            "Beta is the slope of the line of best fit between the two log prices: how "
-            "much of B normally balances A. We check that it is positive, that it did not "
-            "change dramatically while we were estimating it, that neither leg dominates "
-            "the money, and that the spread genuinely oscillates around its average."
+            "Beta is the slope of the fit between the two log prices: how much of B "
+            "balances A. It must be positive and stable, neither leg may dominate, and "
+            "the spread must oscillate around its average."
         ),
         plain_english=plain,
     )
@@ -156,12 +154,11 @@ def _unusual_today_card(
     elif abs(z) >= caution_z:
         status = CardStatus.CAUTION
         plain = (
-            "Today's gap is stretched but has not reached the entry threshold yet — "
-            "one to watch, not to act on."
+            "Today's gap is stretched but below the entry threshold: watch, do not act."
         )
     else:
         status = CardStatus.FAIL
-        plain = "Today's gap is within its normal range, so there is nothing unusual to act on."
+        plain = "Today's gap is within its normal range: nothing unusual to act on."
     return EvidenceCard(
         key="unusual_today",
         title="Is today's gap unusual?",
@@ -184,9 +181,9 @@ def _unusual_today_card(
 
 
 _Z_TOOLTIP = (
-    "The z-score counts how many recent standard deviations today's spread sits from "
-    f"its previous {config.ROLLING_WINDOW}-day average. It is a ruler for unusualness, "
-    "not a prediction guarantee."
+    "The z-score counts how many standard deviations today's spread sits from its "
+    f"previous {config.ROLLING_WINDOW}-day average: a ruler for unusualness, not a "
+    "prediction."
 )
 
 
@@ -198,8 +195,7 @@ def _worked_historically_card(metrics: BacktestMetrics | None) -> EvidenceCard:
             status=CardStatus.FAIL,
             headline_value="n/a",
             detail_lines=[
-                "The historical simulation was not run because the relationship "
-                "check failed first.",
+                "Not run: the relationship check failed first.",
             ],
             how_this_works=_BACKTEST_TOOLTIP,
             plain_english="There is no usable relationship, so history could not be tested.",
@@ -207,20 +203,19 @@ def _worked_historically_card(metrics: BacktestMetrics | None) -> EvidenceCard:
     if metrics.screen_passed and metrics.limited_evidence:
         status = CardStatus.CAUTION
         plain = (
-            f"The unchanged rule cleared the minimum screen after costs, but with only "
-            f"{metrics.n_trades} trades this is limited evidence, not statistical proof."
+            f"The rule cleared the screen after costs, but {metrics.n_trades} trades "
+            "is limited evidence, not proof."
         )
     elif metrics.screen_passed:
         status = CardStatus.PASS
         plain = (
-            "The unchanged rule cleared the minimum historical screen after costs on "
-            "later dates the fit never saw."
+            "The unchanged rule cleared the screen after costs on dates the fit never saw."
         )
     else:
         status = CardStatus.FAIL
         plain = (
-            "The unchanged rule did not clear the minimum historical screen after "
-            "costs, so no trade is proposed."
+            "The rule did not clear the historical screen after costs, so no trade "
+            "is proposed."
         )
     profit_factor_line = (
         f"Profit factor: {metrics.profit_factor:.2f} (must be above "
@@ -258,8 +253,7 @@ def _worked_historically_card(metrics: BacktestMetrics | None) -> EvidenceCard:
 
 
 _BACKTEST_TOOLTIP = (
-    "We replay the identical fixed rule over the most recent 40% of dates, which were "
-    "never used to fit the relationship. Signals form at a close, execute at the next "
-    "open, and costs are charged on both legs at entry and exit. Passing this screen "
-    "is a minimum requirement, not proof of future profit."
+    "The identical fixed rule replays over the most recent 40% of dates, never used "
+    "in fitting. Signals form at a close and execute at the next open, with costs on "
+    "both legs at entry and exit. Passing is a minimum bar, not proof of future profit."
 )
