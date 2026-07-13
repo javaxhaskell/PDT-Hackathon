@@ -100,8 +100,10 @@ DEEPSEEK_MAX_OUTPUT_TOKENS = 1500
 # ---------------------------------------------------------------------------
 # Server
 # ---------------------------------------------------------------------------
+# Origins are normalised (trailing slash stripped) because browser Origin
+# headers never carry one and the CORS match must be character-exact.
 CORS_ORIGINS = [
-    o.strip()
+    o.strip().rstrip("/")
     for o in os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",")
     if o.strip()
 ]
