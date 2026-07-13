@@ -4,7 +4,7 @@ Pipeline (see docs/MODEL.md for the full plain-English write-up):
 
 1. Canonicalise: sort the two tickers alphabetically and fit/simulate in
    that fixed order, so (KO, PEP) and (PEP, KO) are the same analysis.
-2. Steps 1-2: full-sample return correlation and the formation-period OLS
+2. Steps 1-2: formation-period return correlation and the formation-period OLS
    line between log prices, with the stability safeguards.
 3. Step 3: frozen-parameter spread over the full sample and the rolling
    previous-60-day z-score. Today's signal is the last evaluation date.

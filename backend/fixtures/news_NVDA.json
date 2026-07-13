@@ -2,17 +2,33 @@
  "metadata": {
   "ticker": "NVDA",
   "provider": "yfinance",
-  "captured_at": "2026-07-13T14:45:34+00:00",
-  "content_hash": "sha256:a6457f78abe08bcfbfb046db59d30e76cefc42f61da10866380c5d268aad7567"
+  "captured_at": "2026-07-13T15:05:33+00:00",
+  "content_hash": "sha256:8d41eeb5dfa56db4d1304c5e0b6ecae868d1f4d5d7a44d61e57786f934b03ab0"
  },
  "items": [
   {
-   "source_id": "yf-e8bb7cea-f956-47e5-8b0d-09d46015c86c",
-   "headline": "SK Hynix stock sees record plunge in Korea despite impressive Nasdaq debut",
-   "snippet": "SK Hynix (SKHYV, SKHY) made its impressive Nasdaq (^IXIC) debut on Friday, but the South Korean shares (000660.KS) are now plunging. Yahoo Finance Senior Business Reporter Ines Ferr\u00e9 and AInvest managing editor Adam Shapiro chat with Morning Brief host Julie Hyman about the company's market moves and earnings outlook.",
-   "source": "Yahoo Finance Video",
-   "published_at": "2026-07-13T13:53:19Z",
-   "url": "https://finance.yahoo.com/video/sk-hynix-stock-sees-record-plunge-in-korea-despite-impressive-nasdaq-debut-135319420.html"
+   "source_id": "yf-1facd0ae-02a4-4f9b-a0d9-52bdb7a65239",
+   "headline": "Nvidia, Micron, and other chip players are poised to become cash-producing machines",
+   "snippet": "Chip players are churning out cash while hyperscalers spend big on the AI build-out.",
+   "source": "Yahoo Finance",
+   "published_at": "2026-07-13T15:02:32Z",
+   "url": "https://finance.yahoo.com/markets/article/nvidia-micron-and-other-chip-players-are-poised-to-become-cash-producing-machines-150232841.html"
+  },
+  {
+   "source_id": "yf-1be8eea4-c2a2-37cb-9144-36b6e5d8cc04",
+   "headline": "Mortgage Rates Are Heading Higher. Here's What It Means for Homebuilder Stocks.",
+   "snippet": "Homes continue to become less affordable, which is bad news for builders.",
+   "source": "Motley Fool",
+   "published_at": "2026-07-13T14:52:00Z",
+   "url": "https://www.fool.com/investing/2026/07/13/mortgage-rates-are-heading-higher-heres-what-it/"
+  },
+  {
+   "source_id": "yf-07e2d354-55d9-3e03-a444-d72954aa00a9",
+   "headline": "These Nvidia-Backed Darlings are Great Dip-Buys, Say Pros",
+   "snippet": "Jensen Huang has been placing bold bets on optical connectivity firms that could define the next chokepoint of the AI race, and a recent market pullback may have just handed investors a rare entry point into his favorite picks.",
+   "source": "24/7 Wall St.",
+   "published_at": "2026-07-13T14:38:47Z",
+   "url": "https://247wallst.com/investing/2026/07/13/these-nvidia-backed-darlings-are-great-dip-buys-say-pros/"
   },
   {
    "source_id": "yf-54cfb389-8583-3034-9f47-dfcec3b8ee12",
@@ -69,22 +85,6 @@
    "source": "Motley Fool",
    "published_at": "2026-07-13T14:18:00Z",
    "url": "https://www.fool.com/investing/2026/07/13/prediction-this-will-be-palantir-technologies-stoc/"
-  },
-  {
-   "source_id": "yf-6124e493-2942-3c97-9d16-bc5b09628e7a",
-   "headline": "Forget Hyperscalers: Here Are the AI Gold Rush Winners to Buy Now",
-   "snippet": "While the biggest names in tech burn through a historic spending spree, a small cluster of suppliers is quietly printing cash at a pace that has no precedent in this industry. Understanding who wins at each stage of the AI cycle could completely change how you position your portfolio.",
-   "source": "24/7 Wall St.",
-   "published_at": "2026-07-13T14:11:09Z",
-   "url": "https://247wallst.com/investing/2026/07/13/forget-hyperscalers-here-are-the-ai-gold-rush-winners-to-buy-now/"
-  },
-  {
-   "source_id": "yf-0d79d329-b343-3cdb-b43f-fe1fe6d9d738",
-   "headline": "5 Strong Dividend Stocks You Can Buy Right Now",
-   "snippet": "Chasing high yields in mid-2026 is easy. Finding dividends that businesses can actually sustain is the harder problem, and these five names across REITs, midstream, and fintech clear that bar while still offering yields near 5%.",
-   "source": "24/7 Wall St.",
-   "published_at": "2026-07-13T14:03:20Z",
-   "url": "https://247wallst.com/investing/2026/07/13/5-strong-dividend-stocks-you-can-buy-right-now/"
   }
  ]
 }

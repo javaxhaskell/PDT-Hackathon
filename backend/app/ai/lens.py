@@ -53,6 +53,8 @@ _COMPANY_NAMES = {
     "NVDA": "NVIDIA Corporation",
     "ALL": "The Allstate Corporation",
     "TRV": "The Travelers Companies, Inc.",
+    "RCL": "Royal Caribbean Cruises Ltd.",
+    "CCL": "Carnival Corporation",
 }
 
 

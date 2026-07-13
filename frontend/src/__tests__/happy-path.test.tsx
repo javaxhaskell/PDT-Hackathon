@@ -130,10 +130,10 @@ describe("PairScope happy path", () => {
     );
 
     // All four evidence cards render with their status labels.
-    expect(screen.getByText("Move together")).toBeInTheDocument();
-    expect(screen.getByText("Stable enough relationship")).toBeInTheDocument();
-    expect(screen.getByText("Unusual today")).toBeInTheDocument();
-    expect(screen.getByText("Worked historically")).toBeInTheDocument();
+    expect(screen.getByText("Do they move together?")).toBeInTheDocument();
+    expect(screen.getByText("Is the relationship steady?")).toBeInTheDocument();
+    expect(screen.getByText("Is today's gap unusual?")).toBeInTheDocument();
+    expect(screen.getByText("Did the rule work in the past?")).toBeInTheDocument();
 
     // --- correctly signed quantities from the sizing legs -------------------
     const legAll = screen.getByTestId("leg-ALL");

@@ -38,9 +38,9 @@ Or separately: `make backend` and `make frontend`.
 
 Open http://localhost:3000, enter two tickers, pick a risk profile and press
 Analyse. Use **Demo (fixture) mode** for a deterministic offline run against
-recorded real market snapshots — try **ALL / TRV** (a candidate setup at
-capture time), **KO / PEP** (a borderline rejection) or **NVDA / KO** (an
-unsuitable pair).
+recorded real market snapshots — try **RCL / CCL** (the cruise-line rivals,
+a "watch" setup), **ALL / TRV** (a candidate setup at capture time),
+**KO / PEP** (an honest rejection) or **NVDA / KO** (an unsuitable pair).
 
 ## Configuration
 
@@ -62,15 +62,20 @@ make test           # backend pytest + frontend vitest
 
 ## Screenshots
 
-Verdict and the four-card evidence checklist (recorded ALL/TRV snapshot):
+Verdict, plain-English summary and the four-question evidence checklist
+(recorded RCL/CCL cruise-rivals snapshot):
 
 ![Verdict and evidence cards](docs/screenshots/verdict-cards.png)
 
-Spread and signal chart with entry/stop bands and historical trade markers:
+Proposed paper trade for an actionable setup (recorded ALL/TRV snapshot):
+
+![Trade plan](docs/screenshots/trade-plan.png)
+
+The gap chart with entry/stop bands and historical trade markers:
 
 ![Spread chart](docs/screenshots/spread-chart.png)
 
-The input form:
+The input form and 30-second explainer:
 
 ![Input form](docs/screenshots/form.png)
 

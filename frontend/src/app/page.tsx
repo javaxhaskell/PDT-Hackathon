@@ -8,6 +8,8 @@ import AnalyseForm, {
 } from "@/components/AnalyseForm";
 import ChartsSection from "@/components/ChartsSection";
 import EvidenceCardView from "@/components/EvidenceCardView";
+import HowItWorks from "@/components/HowItWorks";
+import StoryStrip from "@/components/StoryStrip";
 import NarrativeCard, {
   type NarrativePanelState,
 } from "@/components/NarrativeCard";
@@ -123,12 +125,12 @@ export default function Home() {
           </span>
         </div>
         <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
-          Enter two related stocks. PairScope measures how unusual their
-          current gap is, checks whether a fixed rule passed a minimum
-          historical screen after costs, sizes a paper trade inside your risk
-          budget, and asks an AI to read recent headlines for context. The
-          numbers say whether the gap is unusual; the AI helps investigate
-          why.
+          Two stocks that usually move together sometimes drift apart.
+          PairScope checks whether today&apos;s gap is genuinely unusual,
+          whether betting on it closing actually worked in the past (after
+          fees), and sizes a pretend trade to your budget. An AI reads recent
+          headlines for context. The numbers say whether the gap is unusual;
+          the AI helps investigate why.
         </p>
       </header>
 
@@ -175,6 +177,8 @@ export default function Home() {
             tickerB={displayB}
           />
 
+          <StoryStrip result={result} />
+
           {result.data && (
             <p className="text-xs text-muted">
               Data: {result.data.provider} · retrieved{" "}
@@ -215,10 +219,10 @@ export default function Home() {
 
       {!result && !errorMsg && (
         <div className="mt-6 space-y-6">
+          <HowItWorks />
           <div className="rounded-xl border border-dashed border-edge p-8 text-center text-sm text-muted">
-            Enter two tickers and press Analyse to run the five-step checklist:
-            move together, stable relationship, unusual today, worked
-            historically, and the AI Narrative Lens.
+            Enter two tickers and press Analyse — or switch to Demo and try
+            RCL vs CCL, the cruise-line rivals.
           </div>
           <WarningsFooter warnings={[]} />
         </div>

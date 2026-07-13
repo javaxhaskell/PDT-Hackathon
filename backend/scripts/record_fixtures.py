@@ -23,7 +23,7 @@ from pathlib import Path
 import yfinance
 
 FIXTURES_DIR = Path(__file__).resolve().parents[1] / "fixtures"
-TICKERS = ["KO", "PEP", "NVDA", "ALL", "TRV"]
+TICKERS = ["KO", "PEP", "NVDA", "ALL", "TRV", "RCL", "CCL"]
 PERIOD = "3y"  # superset; shorter lookbacks slice from this
 
 

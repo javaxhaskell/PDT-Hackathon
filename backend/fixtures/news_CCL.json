@@ -1,0 +1,90 @@
+{
+ "metadata": {
+  "ticker": "CCL",
+  "provider": "yfinance",
+  "captured_at": "2026-07-13T15:05:35+00:00",
+  "content_hash": "sha256:96e3beaf280222b55f8e4ec4891c75e606f9f7262de38e723c88ce0ed104e720"
+ },
+ "items": [
+  {
+   "source_id": "yf-7db893da-aa2d-35d6-8e6a-44de138563d2",
+   "headline": "Stocks making big moves this week: Lazard, Cloudflare, DigitalOcean, Sonos, and Carnival",
+   "snippet": "Check out the companies making headlines this week:",
+   "source": "StockStory",
+   "published_at": "2026-07-10T20:23:20Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/stocks-making-big-moves-week-202320290.html"
+  },
+  {
+   "source_id": "yf-51371f5b-fd29-370f-81b3-3c05e1363031",
+   "headline": "Why Carnival (CCL) Stock Is Up Today",
+   "snippet": "Shares of cruise ship company Carnival (NYSE:CCL) jumped 5.3% in the afternoon session after the company announced its board of directors declared a quarterly dividend of $0.15 per share.",
+   "source": "StockStory",
+   "published_at": "2026-07-09T21:35:42Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-carnival-ccl-stock-today-213542001.html"
+  },
+  {
+   "source_id": "yf-0c89d7b0-a7cc-3779-a4d7-51e0d91105f5",
+   "headline": "Why Are Norwegian Cruise Line (NCLH) Shares Soaring Today",
+   "snippet": "Shares of cruise company Norwegian Cruise Line (NYSE:NCLH) jumped 7.7% in the afternoon session after Morgan Stanley boosted its price target on the stock, signaling growing confidence in the cruise company's financial prospects.",
+   "source": "StockStory",
+   "published_at": "2026-07-09T20:15:42Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/why-norwegian-cruise-line-nclh-201542925.html"
+  },
+  {
+   "source_id": "yf-d1d2c1c7-94f2-3cd5-9797-890d058da313",
+   "headline": "Norwegian Cruise Line Jumps 8%, Carnival Climbs 5%, Royal Caribbean Rises 3% in Cruise-Stock Rebound",
+   "snippet": "Cruise stocks are staging a sharp rebound at midday Thursday. Norwegian Cruise Line Holdings (NYSE:NCLH) is leading the group, up 8% to $20, while Carnival (NYSE:CCL) shares trade up 5% to $27 and Royal Caribbean Cruises (NYSE:RCL) shares are up 3% to $289. The bounce follows a rough stretch for the group. NCLH stock had ... Norwegian Cruise Line Jumps 8%, Carnival Climbs 5%, Royal Caribbean Rises 3% in Cruise-Stock Rebound",
+   "source": "24/7 Wall St.",
+   "published_at": "2026-07-09T17:33:37Z",
+   "url": "https://247wallst.com/investing/2026/07/09/norwegian-cruise-line-jumps-8-carnival-climbs-5-royal-caribbean-rises-3-in-cruise-stock-rebound/"
+  },
+  {
+   "source_id": "yf-dec3359a-949c-386a-b0b8-3447baa49513",
+   "headline": "Tractor Supply downgrade, Five Below upgraded: Wall Street's top analyst calls",
+   "snippet": "Tractor Supply downgrade, Five Below upgraded: Wall Street's top analyst calls",
+   "source": "The Fly",
+   "published_at": "2026-07-09T13:47:11Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/micron-downgraded-five-below-upgraded-133947861.html"
+  },
+  {
+   "source_id": "yf-9bacf131-7027-31b7-ab01-2e9810d4f31e",
+   "headline": "Can Royal Caribbean Offset Europe Weakness With Caribbean Strength?",
+   "snippet": "RCL is betting on Caribbean strength, new destinations and positive yields to cushion Europe-related pressure in 2026.",
+   "source": "Zacks",
+   "published_at": "2026-07-09T12:41:00Z",
+   "url": "https://finance.yahoo.com/news/royal-caribbean-offset-europe-weakness-124100806.html"
+  },
+  {
+   "source_id": "yf-6b8492dd-fb25-3a1f-a9b1-439e05994a98",
+   "headline": "Company News for July 9, 2026",
+   "snippet": "Companies in The News Are: PENG, EPAC, NVDA, CCL.",
+   "source": "Zacks",
+   "published_at": "2026-07-09T09:44:00Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/company-news-july-9-2026-094400168.html"
+  },
+  {
+   "source_id": "yf-ca3d129b-7eb7-3126-b74b-b43a2acb0a4a",
+   "headline": "Is Carnival (CCL) Betting Too Heavily on Private Islands With Its Celebration Key Expansion?",
+   "snippet": "Carnival Corporation recently completed the extension of its Celebration Key pier on Grand Bahama Island, adding two new berths so the destination can now host up to four ships and roughly 13,000 guests per day while supporting thousands of local jobs and billions of dollars in projected long-term economic impact for The Bahamas. The pier expansion, which unlocks roughly 200 extra ship calls and about 700,000 more guest arrivals annually, underlines how Carnival is deepening its reliance on...",
+   "source": "Simply Wall St.",
+   "published_at": "2026-07-09T03:15:03Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/carnival-ccl-betting-too-heavily-031503202.html"
+  },
+  {
+   "source_id": "yf-a1e1df1b-4a5c-330a-8b13-071529cce099",
+   "headline": "Carnival (CCL) Slides On Oil Price Fears, Is It 28% Undervalued?",
+   "snippet": "Carnival (CCL) is back in focus after its shares declined sharply in recent sessions, as rising oil prices raised concerns about cruise fuel costs and the stock was removed from several Russell growth indices. See our latest analysis for Carnival. At a share price of $25.64, Carnival\u2019s recent declines, including a 7 day share price return of down 10.1% and year to date share price return of down 17.1%, contrast with a 3 year total shareholder return of 42.2%. This suggests near term momentum...",
+   "source": "Simply Wall St.",
+   "published_at": "2026-07-09T02:13:08Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/carnival-ccl-slides-oil-price-021308881.html"
+  },
+  {
+   "source_id": "yf-e279435a-f75b-30d0-8fcc-4bb0affd598a",
+   "headline": "Carnival (CCL) Completes Celebration Key Pier Early As Capacity Doubles",
+   "snippet": "Carnival has completed the pier extension at Celebration Key on Grand Bahama Island ahead of schedule. The expansion doubles operational capacity at the private destination for Carnival cruise brands. The upgraded pier is intended to support higher guest volumes and deeper Caribbean deployment for the company. The latest development at Celebration Key comes as Carnival (NYSE:CCL) trades around $25.64, with the stock down 10.1% over the past week and 17.1% year to date. Over a 3 year period,...",
+   "source": "Simply Wall St.",
+   "published_at": "2026-07-09T01:12:35Z",
+   "url": "https://finance.yahoo.com/markets/stocks/articles/carnival-ccl-completes-celebration-key-011235786.html"
+  }
+ ]
+}

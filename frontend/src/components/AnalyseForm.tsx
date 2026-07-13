@@ -180,7 +180,7 @@ export default function AnalyseForm({
         </div>
         <div>
           <label htmlFor="lookback" className={labelClass}>
-            Lookback
+            History window
           </label>
           <select
             id="lookback"
@@ -195,7 +195,7 @@ export default function AnalyseForm({
         </div>
         <div>
           <label htmlFor="cost-bps" className={labelClass}>
-            Cost (bps per leg)
+            Trading fee (bps per leg)
           </label>
           <input
             id="cost-bps"
@@ -260,7 +260,8 @@ export default function AnalyseForm({
           </div>
           <p className="mt-1 text-xs text-muted">
             Live fetches fresh yfinance prices; Demo replays a recorded market
-            snapshot for a reliable offline run.
+            snapshot for a reliable offline run. Demo pairs to try: RCL/CCL
+            (cruise rivals), ALL/TRV (insurers), KO/PEP (cola wars).
           </p>
         </fieldset>
       </div>

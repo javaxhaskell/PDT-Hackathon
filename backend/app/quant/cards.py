@@ -63,17 +63,18 @@ def _move_together_card(
     )
     return EvidenceCard(
         key="move_together",
-        title="Move together",
+        title="Do they move together?",
         status=status,
-        headline_value=f"{correlation:.2f}",
+        headline_value=f"{correlation:.2f} / 1.00",
         detail_lines=[
             f"Daily-return correlation: {correlation:.2f}",
             f"Pass threshold: at least {config.MIN_CORRELATION:.2f}",
         ],
         how_this_works=(
             "We measure the Pearson correlation of the two stocks' daily percentage "
-            "moves over the whole sample. Values near 1 mean they usually move in the "
-            "same direction on the same day; this is only a first filter, never an edge."
+            "moves over the formation window (the first 60% of dates). Values near 1 "
+            "mean they usually move in the same direction on the same day; this is "
+            "only a first filter, never an edge."
         ),
         plain_english=plain,
     )
@@ -102,9 +103,9 @@ def _stable_relationship_card(
     )
     return EvidenceCard(
         key="stable_relationship",
-        title="Stable enough relationship",
+        title="Is the relationship steady?",
         status=status,
-        headline_value=f"beta = {beta:.2f}",
+        headline_value=f"balance ratio {beta:.2f}",
         detail_lines=[
             f"Hedge ratio (beta): {beta:.3f} (must be a positive, finite number)",
             (
@@ -134,7 +135,7 @@ def _unusual_today_card(
     if signal is None:
         return EvidenceCard(
             key="unusual_today",
-            title="Unusual today",
+            title="Is today's gap unusual?",
             status=CardStatus.FAIL,
             headline_value="n/a",
             detail_lines=[
@@ -163,9 +164,9 @@ def _unusual_today_card(
         plain = "Today's gap is within its normal range, so there is nothing unusual to act on."
     return EvidenceCard(
         key="unusual_today",
-        title="Unusual today",
+        title="Is today's gap unusual?",
         status=status,
-        headline_value=f"z = {z:+.2f}",
+        headline_value=f"{abs(z):.1f}x the usual drift",
         detail_lines=[
             f"Current z-score: {z:+.2f} (as of {signal.as_of_date})",
             (
@@ -193,7 +194,7 @@ def _worked_historically_card(metrics: BacktestMetrics | None) -> EvidenceCard:
     if metrics is None:
         return EvidenceCard(
             key="worked_historically",
-            title="Worked historically",
+            title="Did the rule work in the past?",
             status=CardStatus.FAIL,
             headline_value="n/a",
             detail_lines=[
@@ -247,7 +248,7 @@ def _worked_historically_card(metrics: BacktestMetrics | None) -> EvidenceCard:
         )
     return EvidenceCard(
         key="worked_historically",
-        title="Worked historically",
+        title="Did the rule work in the past?",
         status=status,
         headline_value=f"{metrics.n_trades} trades, net {metrics.net_profit:+.1%}",
         detail_lines=detail_lines,

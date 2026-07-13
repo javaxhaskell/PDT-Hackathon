@@ -25,7 +25,7 @@ export default function ChartsSection({
   return (
     <section aria-label="Charts" className="space-y-4">
       <div className="rounded-xl border border-edge bg-surface p-5">
-        <h3 className="text-sm font-semibold text-ink">Spread and signal</h3>
+        <h3 className="text-sm font-semibold text-ink">The gap between them</h3>
         <p className="mt-1 text-xs text-muted">
           Distance from the fitted relationship, its rolling mean
           {entryZ !== undefined && stopZ !== undefined
@@ -69,7 +69,7 @@ export default function ChartsSection({
           <span aria-hidden className="mr-2 inline-block group-open:rotate-90">
             &#9656;
           </span>
-          Backtest equity (after costs)
+          If you&apos;d followed the rule (after fees)
           {maxDrawdown !== null && maxDrawdown !== undefined && (
             <span className="ml-3 rounded-full border border-edge bg-surface-deep px-2.5 py-0.5 font-mono text-xs font-semibold text-neg-text">
               Max drawdown {fmtPct(maxDrawdown)}

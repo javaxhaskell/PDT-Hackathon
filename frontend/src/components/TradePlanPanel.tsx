@@ -88,23 +88,23 @@ export default function TradePlanPanel({
 
       <dl className="mt-4 grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat
-          label="Gross exposure"
+          label="Total position (both sides)"
           value={fmtMoney(sizing.gross_exposure, currency)}
           hint={`Allowed: ${fmtMoney(sizing.max_gross_allowed, currency)}`}
         />
         <Stat
-          label="Net exposure"
+          label="Net market bet"
           value={fmtMoney(sizing.net_exposure, currency)}
         />
         <Stat
-          label="Estimated cost"
+          label="Estimated fees"
           value={fmtMoney(sizing.estimated_cost, currency)}
           hint="All four legs — entry now, exit estimated at current prices"
         />
         <Stat
-          label="Stress loss vs budget"
+          label="Worst-case estimate vs budget"
           value={`${fmtMoney(sizing.stress_loss_estimate, currency)} of ${fmtMoney(sizing.risk_budget, currency)}`}
-          hint="Worst historical trade applied to this size"
+          hint="Worst past trade applied to this size — not a guaranteed maximum"
         />
         <Stat
           label="Remaining cash"

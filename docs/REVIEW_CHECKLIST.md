@@ -157,7 +157,7 @@ contracts only in `backend/app/schemas/contracts.py`.
 ## 7. Understandable language
 
 - [ ] `explanation` is one sentence of plain English naming the tickers, not
-      jargon ("KO looks unusually expensive relative to PEP").
+      jargon ("ALL looks unusually expensive relative to TRV").
 - [ ] Every evidence card has a one–two sentence "How this works" tooltip and
       a plain-English takeaway; no unexplained terms (OLS, stationarity,
       cointegration must not appear in UI copy).
@@ -212,8 +212,8 @@ contracts only in `backend/app/schemas/contracts.py`.
 
 ## 9. Ten-minute demo reliability
 
-- [ ] Full fixture demo works with Wi-Fi off (analyse + narrative on KO/PEP,
-      rejection on NVDA/KO).
+- [ ] Full fixture demo works with Wi-Fi off (analyse + narrative on ALL/TRV,
+      rejection on KO/PEP and NVDA/KO).
 - [ ] Repeating the same fixture request returns byte-identical responses
       (determinism test).
 - [ ] Fixture files pass their `content_hash` verification; capture metadata
@@ -285,9 +285,17 @@ Carry these into the Phase 4 review explicitly:
    listed). Fine for a contract example, but real engine output must
    reconcile exactly; replace the example with a recorded real response at
    integration if time permits.
+   **RESOLVED:** the file is now a real recorded backend response for the
+   ALL/TRV fixture pair, wrapped as `{_comment, analyse, narrative}`; the
+   narrative block comes from the deterministic fake provider (model
+   `"fake-narrative"`), and `docs/API.md` describes it as such.
 6. **HTTP status conventions.** Docs assume domain states in 200 bodies,
    422 for validation, `ApiError` otherwise — confirm Agent B's handlers
    match, or update `docs/API.md` at integration.
+   **RESOLVED:** handlers in `backend/app/api/main.py` emit uppercase codes
+   `VALIDATION_ERROR` (422, `details.errors[]` of `{loc, msg}`),
+   `PROVIDER_ERROR` (502) and `INTERNAL_ERROR` (500); `docs/API.md` now
+   documents exactly these.
 7. **Staleness rule.** `STALE_CALENDAR_DAYS = 7` is the documented
    conservative calendar-day rule; a test must cover a stale fixture.
 8. **`SignalStats` may be null.** Frontend must handle
@@ -297,5 +305,8 @@ Carry these into the Phase 4 review explicitly:
    formation parameters, but §4.2 doesn't state the window explicitly —
    confirm Agent A computes it on the formation period and documents it in
    `docs/MODEL.md`.
+   **RESOLVED:** `backend/app/quant/relationship.py` computes the return
+   correlation on the formation slice only (`iloc[:split]`), and
+   `docs/MODEL.md` §2 now documents the formation-only window.
 10. **Swap symmetry test exists.** Canonicalisation is the engine's job
     (INTERFACES.md); ensure a test analyses both (A,B) and (B,A) orderings.
