@@ -2,6 +2,15 @@
 
 Frontend (Next.js) → **Vercel**. Backend (FastAPI) → **Render**.
 
+**Live now (verified 2026-07-14):**
+- Frontend: <https://pdt-hackathon.vercel.app>
+- Backend: <https://pdt-hackathon.onrender.com> (`/api/health` → `{"status":"ok",...}`)
+
+Both auto-redeploy on push to `main`. The URLs below are the real ones; the
+Render service is named `pdt-hackathon` (its subdomain), and the Vercel project
+resolves to `pdt-hackathon.vercel.app`. Keep these consistent — the frontend
+bakes the backend URL at build time, so a mismatch silently breaks the app.
+
 The two must know each other's URLs, so deploy in this order and wire them at
 the end. `NEXT_PUBLIC_API_BASE_URL` is **baked into the frontend at build time**,
 so it must be set on Vercel *before* the frontend build runs.
@@ -9,13 +18,13 @@ so it must be set on Vercel *before* the frontend build runs.
 ## 1. Backend → Render
 
 1. Render dashboard → **New → Blueprint** → connect `javaxhaskell/PDT-Hackathon`.
-   Render reads [`render.yaml`](render.yaml) and creates the `buy-the-rumour-api`
+   Render reads [`render.yaml`](render.yaml) and creates the `pdt-hackathon`
    web service (root dir `backend`, `uvicorn app.api.main:app`).
 2. When prompted, set the two secret env vars:
    - `DEEPSEEK_API_KEY` — your DeepSeek key (optional; blank = quant only, AI lens
      shows "not configured").
    - `CORS_ORIGINS` — leave blank for now; you'll fill it in step 3.
-3. Deploy. Note the service URL, e.g. `https://buy-the-rumour-api.onrender.com`.
+3. Deploy. The service URL is `https://pdt-hackathon.onrender.com`.
    Verify: open `<url>/api/health` → `{"status":"ok",...}`.
 
 ## 2. Frontend → Vercel
@@ -25,13 +34,13 @@ so it must be set on Vercel *before* the frontend build runs.
    `package.json`; Vercel must build from `frontend/`). Framework auto-detects as
    Next.js.
 3. Add env var **`NEXT_PUBLIC_API_BASE_URL`** = the Render URL from step 1
-   (e.g. `https://buy-the-rumour-api.onrender.com`, no trailing slash).
-4. Deploy. Note the Vercel URL, e.g. `https://buy-the-rumour.vercel.app`.
+   (`https://pdt-hackathon.onrender.com`, no trailing slash).
+4. Deploy. The Vercel URL is `https://pdt-hackathon.vercel.app`.
 
 ## 3. Wire CORS back to the backend
 
 1. Render → the service → **Environment** → set `CORS_ORIGINS` to the Vercel URL
-   (e.g. `https://buy-the-rumour.vercel.app`, no trailing slash). Add any custom
+   (`https://pdt-hackathon.vercel.app`, no trailing slash). Add any custom
    domains too, comma-separated.
 2. Render redeploys. Done.
 

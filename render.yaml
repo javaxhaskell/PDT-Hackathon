@@ -7,11 +7,15 @@
 #   - DEEPSEEK_API_KEY : your DeepSeek key (secret). Leave blank to run the
 #                        quant engine only; the AI Narrative Lens degrades
 #                        gracefully to "not configured".
-#   - CORS_ORIGINS     : the deployed Vercel URL (e.g. https://your-app.vercel.app),
+#   - CORS_ORIGINS     : the deployed Vercel URL (https://pdt-hackathon.vercel.app),
 #                        comma-separated, no trailing slash.
+#
+# The service `name` below is the Render subdomain: name `pdt-hackathon`
+# => https://pdt-hackathon.onrender.com (the live backend). It must match the
+# existing Render service exactly, or a Blueprint deploy creates a duplicate.
 services:
   - type: web
-    name: buy-the-rumour-api
+    name: pdt-hackathon
     runtime: python
     rootDir: backend
     plan: free
