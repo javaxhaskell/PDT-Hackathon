@@ -81,25 +81,18 @@ logger = logging.getLogger("pairscope.api")
 
 # Standard warnings (spec section 14) attached to every analysis response.
 STANDARD_WARNINGS = [
-    "Historical performance does not guarantee future results.",
-    "Correlation and price relationships can break.",
-    "yfinance is an unofficial data source and can be delayed or incomplete.",
-    (
-        "The model estimates costs but does not fully model bid-ask spreads, "
-        "borrow availability, borrow fees, dividends on short positions, "
-        "market impact, taxes or corporate events."
-    ),
-    "Proposed trades are paper examples only, not financial advice.",
-    (
-        "AI summaries can be incomplete or wrong and must be checked against "
-        "their linked sources."
-    ),
+    "Past performance doesn't guarantee future results.",
+    "Correlations between stocks can break down.",
+    "Price data is unofficial and may be delayed or incomplete.",
+    "Cost estimates exclude spreads, borrow fees, dividends, taxes and market impact.",
+    "Trades are paper examples only, not financial advice.",
+    "AI summaries can be wrong; always check the linked sources.",
 ]
 
 app = FastAPI(
-    title="PairScope API",
+    title="Buy The Rumour API",
     version=config.METHODOLOGY_VERSION,
-    description="Transparent hybrid stat-arb research tool (educational use only).",
+    description="Transparent hybrid stat-arb research tool.",
 )
 app.add_middleware(
     CORSMiddleware,
@@ -347,8 +340,8 @@ def analyse(
             request,
             FinalState.UNSUITABLE_PAIR,
             f"{ticker_a} is quoted in {history_a.currency} but {ticker_b} is quoted "
-            f"in {history_b.currency}; PairScope only analyses pairs quoted in the "
-            "same currency.",
+            f"in {history_b.currency}; Buy The Rumour only analyses pairs quoted in "
+            "the same currency.",
         )
 
     # 4. Clean and align to common trading dates.

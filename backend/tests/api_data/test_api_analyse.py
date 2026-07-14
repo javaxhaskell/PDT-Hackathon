@@ -33,8 +33,8 @@ class TestFixtureDeterminism:
 
     def test_standard_warnings_present(self, client):
         body = client.post("/api/analyse", json=fixture_analyse_payload()).json()
-        assert "Historical performance does not guarantee future results." in body["warnings"]
-        assert "Proposed trades are paper examples only, not financial advice." in (
+        assert "Past performance doesn't guarantee future results." in body["warnings"]
+        assert "Trades are paper examples only, not financial advice." in (
             body["warnings"]
         )
 

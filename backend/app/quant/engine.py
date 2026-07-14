@@ -286,8 +286,8 @@ def run_analysis(
 
     if metrics is not None and metrics.screen_passed and metrics.limited_evidence:
         warnings.append(
-            f"The historical screen passed with limited evidence ({metrics.n_trades} "
-            "completed trades); treat the result with extra caution."
+            f"Historical screen passed on limited evidence ({metrics.n_trades} "
+            "trades); treat with caution."
         )
     if metrics is not None and metrics.profit_factor is None and metrics.n_trades > 0:
         warnings.append(

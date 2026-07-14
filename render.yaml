@@ -1,0 +1,30 @@
+# Render Blueprint for the Buy The Rumour backend (FastAPI).
+# Deploy: Render dashboard -> New -> Blueprint -> connect this repo.
+# Render reads this file and provisions the service below.
+#
+# Two env vars are intentionally NOT stored here (sync: false) and must be set
+# in the Render dashboard after the first deploy:
+#   - DEEPSEEK_API_KEY : your DeepSeek key (secret). Leave blank to run the
+#                        quant engine only; the AI Narrative Lens degrades
+#                        gracefully to "not configured".
+#   - CORS_ORIGINS     : the deployed Vercel URL (e.g. https://your-app.vercel.app),
+#                        comma-separated, no trailing slash.
+services:
+  - type: web
+    name: buy-the-rumour-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"
+      - key: DEEPSEEK_MODEL
+        value: deepseek-v4-flash
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

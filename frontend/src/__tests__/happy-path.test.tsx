@@ -160,7 +160,7 @@ describe("PairScope happy path", () => {
     expect(
       await screen.findByText(/no obvious news explanation/i),
     ).toBeInTheDocument();
-    expect(screen.getByText("AI-generated")).toBeInTheDocument();
+    expect(screen.getByText("AI Narrative Lens")).toBeInTheDocument();
     const citedLinks = screen.getAllByRole("link", {
       name: /Allstate \(ALL\) Stock Slides as Market Rises/i,
     });

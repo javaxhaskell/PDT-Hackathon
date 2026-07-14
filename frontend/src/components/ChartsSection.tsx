@@ -71,7 +71,7 @@ export default function ChartsSection({
           <span aria-hidden className="mr-2 inline-block group-open:rotate-90">
             &#9656;
           </span>
-          If you&apos;d followed the rule (after fees)
+          Backtested equity curve (after fees)
           {maxDrawdown !== null && maxDrawdown !== undefined && (
             <span className="ml-3 rounded-[2px] border border-neg/60 px-2 py-0.5 font-mono text-xs tabular-nums tracking-normal text-neg">
               Max drawdown {fmtPct(maxDrawdown)}

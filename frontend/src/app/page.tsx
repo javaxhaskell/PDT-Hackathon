@@ -118,17 +118,19 @@ export default function Home() {
       <header className="mb-8 border-b border-edge pb-6">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
           <h1 className="text-2xl font-semibold tracking-tight text-ink">
-            PairScope
+            Buy The Rumour
           </h1>
           <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
-            Educational research tool. Not financial advice.
+            Not financial advice.
           </span>
         </div>
         <p className="mt-3 max-w-3xl text-[13px] leading-relaxed text-muted">
-          Two stocks that usually move together sometimes drift apart.
-          PairScope checks whether today&apos;s gap is unusual, whether trading
-          it worked in the past after fees, and sizes a paper trade to your
-          budget; an AI reads recent headlines for context.
+          <strong className="font-semibold text-ink">
+            Two stocks that usually move together sometimes drift apart.
+          </strong>{" "}
+          Buy The Rumour checks whether today&apos;s gap is unusual, whether
+          trading it worked in the past after fees, and sizes a paper trade to
+          your budget; an AI reads recent headlines for context.
         </p>
       </header>
 

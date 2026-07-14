@@ -99,8 +99,8 @@ export function aiStatusLabel(status: AiStatus): string {
   }
 }
 
-export const EDUCATIONAL_DISCLAIMER =
-  "PairScope is an educational research tool. Proposed trades are paper " +
-  "examples only, not financial advice, and nothing here guarantees profit. " +
-  "It never sends orders and never connects to a brokerage.";
+export const DISCLAIMER =
+  "Buy The Rumour proposes paper trades only, not financial advice, and " +
+  "nothing here guarantees profit. It never sends orders and never connects " +
+  "to a brokerage.";
 

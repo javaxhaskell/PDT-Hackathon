@@ -55,6 +55,26 @@ export function fmtTimestamp(iso: string): string {
   return `${text} UTC`;
 }
 
+/**
+ * Turn a machine-style tag into a readable label for display, e.g.
+ * "interest_rate_hike_warnings" -> "Interest Rate Hike Warnings" and
+ * "geopolitical_tensions" -> "Geopolitical Tensions". Underscores and hyphens
+ * become spaces; short all-caps tokens (US, AI, SEC) are kept as acronyms.
+ */
+export function fmtLabel(raw: string): string {
+  return raw
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .split(" ")
+    .map((word) =>
+      word.length <= 3 && word === word.toUpperCase()
+        ? word
+        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+    )
+    .join(" ");
+}
+
 /** ISO date or timestamp -> "13 Jul 2026". */
 export function fmtDate(iso: string): string {
   const d = new Date(iso);

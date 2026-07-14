@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "PairScope",
+  title: "Buy The Rumour",
   description:
     "Transparent pairs-trading research: correlation, spread z-score, an after-cost historical screen, risk-sized paper trades and an AI narrative lens.",
 };

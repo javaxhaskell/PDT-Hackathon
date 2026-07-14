@@ -1,6 +1,59 @@
-import { aiStatusLabel, classificationLabel } from "@/lib/copy";
-import { fmtTimestamp } from "@/lib/format";
-import type { NarrativeResponse, NewsItem } from "@/lib/types";
+import { classificationLabel } from "@/lib/copy";
+import { fmtLabel } from "@/lib/format";
+import type {
+  NarrativeClassification,
+  NarrativeResponse,
+  NewsItem,
+} from "@/lib/types";
+
+/**
+ * How likely the price gap is explained by real news rather than noise, which
+ * is what matters for a mean-reversion trade. Rendered as a traffic-light
+ * badge: green (low) reversion is more plausible, red (high) less so.
+ */
+const RISK_GRADE = {
+  HIGH: { label: "High risk", className: "border-neg/60 bg-neg/10 text-neg" },
+  MEDIUM: {
+    label: "Medium risk",
+    className: "border-warn/60 bg-warn/10 text-warn",
+  },
+  LOW: { label: "Low risk", className: "border-pos/60 bg-pos/10 text-pos" },
+} as const;
+
+function reversionRisk(
+  classification: NarrativeClassification,
+  elevated: boolean,
+): keyof typeof RISK_GRADE {
+  if (elevated || classification === "POSSIBLE_COMPANY_SPECIFIC_EXPLANATION") {
+    return "HIGH";
+  }
+  if (classification === "NO_OBVIOUS_NEWS_EXPLANATION") {
+    return "LOW";
+  }
+  return "MEDIUM";
+}
+
+/**
+ * Bold whole-word ticker mentions (e.g. GS, MS) inside a sentence of AI prose
+ * so the reader can scan which company each statement is about at a glance.
+ */
+function highlightTickers(
+  text: string,
+  tickers: string[],
+): React.ReactNode {
+  if (tickers.length === 0) return text;
+  const escaped = tickers.map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const parts = text.split(new RegExp(`\\b(${escaped.join("|")})\\b`, "g"));
+  return parts.map((part, i) =>
+    tickers.includes(part) ? (
+      <strong key={i} className="font-semibold text-ink">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
 
 export type NarrativePanelState =
   | { status: "off" }
@@ -18,9 +71,6 @@ function Shell({ children }: { children: React.ReactNode }) {
         <h3 className="text-[11px] font-medium uppercase tracking-[0.14em] text-muted">
           AI Narrative Lens
         </h3>
-        <span className="rounded-[2px] border border-edge px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
-          AI-generated
-        </span>
       </header>
       <div className="mt-4 border-t border-edge pt-4">{children}</div>
     </section>
@@ -123,6 +173,14 @@ export default function NarrativeCard({
   const citedItems = (ids: string[]) =>
     data.news_items.filter((n) => ids.includes(n.source_id));
 
+  // The two tickers in play, taken from the supplied headlines, so we can
+  // bold them wherever they appear in the AI's prose.
+  const tickers = Array.from(
+    new Set(data.news_items.map((n) => n.ticker)),
+  ).filter(Boolean);
+
+  const risk = RISK_GRADE[reversionRisk(data.classification, data.elevated_news_risk)];
+
   return (
     <Shell>
       <div className="space-y-4">
@@ -140,26 +198,16 @@ export default function NarrativeCard({
           <p className="text-lg font-semibold text-ink">
             {classificationLabel(data.classification)}
           </p>
-          {data.confidence && (
-            <span className="rounded-[2px] border border-edge px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted">
-              Confidence: {data.confidence}
-            </span>
-          )}
-          {data.ai_status === "recorded" && (
-            <span className="rounded-[2px] border border-warn/60 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-warn">
-              {aiStatusLabel("recorded")}
-              {data.recorded_at ? `, ${fmtTimestamp(data.recorded_at)}` : ""}
-            </span>
-          )}
+          <span
+            className={`rounded-[2px] border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] ${risk.className}`}
+          >
+            {risk.label}
+          </span>
         </div>
-        <p className="text-xs text-faint">
-          Confidence is the model&apos;s self-assessment of its reading, not a
-          probability of profit.
-        </p>
 
         {data.explanation && (
           <p className="text-[13px] leading-relaxed text-ink">
-            {data.explanation}
+            {highlightTickers(data.explanation, tickers)}
           </p>
         )}
 
@@ -169,7 +217,9 @@ export default function NarrativeCard({
               <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
                 Company A news
               </dt>
-              <dd className="mt-1 text-muted">{data.summary_a}</dd>
+              <dd className="mt-1 text-muted">
+                {highlightTickers(data.summary_a, tickers)}
+              </dd>
             </div>
           )}
           {data.summary_b && (
@@ -177,7 +227,9 @@ export default function NarrativeCard({
               <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
                 Company B news
               </dt>
-              <dd className="mt-1 text-muted">{data.summary_b}</dd>
+              <dd className="mt-1 text-muted">
+                {highlightTickers(data.summary_b, tickers)}
+              </dd>
             </div>
           )}
           {data.shared_story && (
@@ -185,7 +237,9 @@ export default function NarrativeCard({
               <dt className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted">
                 Shared story
               </dt>
-              <dd className="mt-1 text-muted">{data.shared_story}</dd>
+              <dd className="mt-1 text-muted">
+                {highlightTickers(data.shared_story, tickers)}
+              </dd>
             </div>
           )}
         </dl>
@@ -201,7 +255,7 @@ export default function NarrativeCard({
                   key={flag}
                   className="rounded-[2px] border border-warn/60 px-2 py-0.5 text-xs text-warn"
                 >
-                  {flag}
+                  {fmtLabel(flag)}
                 </li>
               ))}
             </ul>
@@ -219,7 +273,9 @@ export default function NarrativeCard({
                   key={claim.claim}
                   className="rounded-none border border-edge bg-surface-deep p-3"
                 >
-                  <p className="text-[13px] text-ink">{claim.claim}</p>
+                  <p className="text-[13px] font-semibold text-ink">
+                    {claim.claim}
+                  </p>
                   <ul className="mt-2 space-y-1 text-xs">
                     {citedItems(claim.source_ids).map((item) => (
                       <li key={item.source_id}>
@@ -249,9 +305,8 @@ export default function NarrativeCard({
         )}
 
         <p className="border-t border-edge pt-3 text-xs text-faint">
-          {data.model ? `Model: ${data.model}. ` : ""}The AI reads only the
-          supplied headlines and never changes the trade direction, backtest or
-          share quantities.
+          The AI reads only the supplied headlines and never changes the trade
+          direction, backtest or share quantities.
         </p>
       </div>
     </Shell>

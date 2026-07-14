@@ -1,4 +1,4 @@
-import { EDUCATIONAL_DISCLAIMER } from "@/lib/copy";
+import { DISCLAIMER } from "@/lib/copy";
 
 export default function WarningsFooter({ warnings }: { warnings: string[] }) {
   // The backend is the single source of warnings (it always includes the
@@ -17,7 +17,7 @@ export default function WarningsFooter({ warnings }: { warnings: string[] }) {
         ))}
       </ul>
       <p className="mt-4 border-t border-edge pt-3 text-xs leading-relaxed text-warn">
-        {EDUCATIONAL_DISCLAIMER}
+        {DISCLAIMER}
       </p>
     </footer>
   );
